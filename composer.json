@@ -1,0 +1,22 @@
+{
+    "name": "bigfoot/seo-bundle",
+    "type": "symfony-bundle",
+    "description": "Bigfoot seo bundle",
+    "keywords": [],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "S.Huot",
+            "email": "s.huot@c2is.fr"
+        }
+    ],
+    "require": {
+        "php":                      ">=5.3.3",
+        "symfony/framework-bundle": ">=2.3"
+    },
+    "autoload": {
+        "psr-0": { "Bigfoot\\Bundle\\SeoBundle": "" }
+    },
+    "target-dir": "Bigfoot/Bundle/SeoBundle",
+    "minimum-stability": "dev"
+}

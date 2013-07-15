@@ -11,8 +11,7 @@
         }
     ],
     "require": {
-        "php":                      ">=5.3.3",
-        "symfony/framework-bundle": ">=2.3"
+        "bigfoot/core-bundle": "dev-master"
     },
     "autoload": {
         "psr-0": { "Bigfoot\\Bundle\\SeoBundle": "" }

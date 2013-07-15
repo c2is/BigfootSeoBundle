@@ -20,7 +20,7 @@ This bundle is made up of two entries' menu in the back-office:
     Here, you can associate X parameters to a route. It will be useful for adding dynamical contents to your metadata.
 
     - Seo:
-    Here, you can enter a title, a description and some keywords for a route by using the paremeters you entered
+    Here, you can enter a title, a description and some keywords for a route by using the parameters you entered
     previously.
 
 Example

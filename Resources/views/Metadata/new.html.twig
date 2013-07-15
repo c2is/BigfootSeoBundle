@@ -1,0 +1,30 @@
+{% extends 'BigfootCoreBundle::base.html.twig' %}
+
+{% block body -%}
+    <h1>Metadata creation</h1>
+
+    <div id="list_parameters"></div>
+
+    <form action="{{ path('admin_seo_metadata_create') }}" method="post" {{ form_enctype(form) }}>
+
+        {{ form_row(form.route) }}
+
+        {{ form_rest(form) }}
+
+        <p>
+            <button type="submit">Create</button>
+        </p>
+    </form>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('admin_seo_metadata') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/bigfootseo/js/seo_scripts.js') }}"></script>
+{% endblock %}

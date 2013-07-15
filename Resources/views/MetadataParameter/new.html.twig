@@ -1,0 +1,36 @@
+{% extends 'BigfootCoreBundle::base.html.twig' %}
+
+{% block body -%}
+    <h1>MetadataParameter creation</h1>
+
+    <form action="{{ path('admin_parameter_metadataparameter_create') }}" method="post" {{ form_enctype(form) }}>
+
+        {{ form_row(form.route) }}
+
+        <h3>Parameters</h3>
+        <ul class="parameters" data-prototype="{{ form_widget(form.parameters.vars.prototype)|e }}">
+            {% for parameter in form.parameters %}
+                <li>{{ form_row(parameter.name) }}</li>
+            {% endfor %}
+        </ul>
+
+        {{ form_rest(form) }}
+
+        <p>
+            <button type="submit">Create</button>
+        </p>
+    </form>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('admin_parameter_metadataparameter') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/bigfootseo/js/seo_scripts.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,21 @@
+parameters:
+    bigfoot_seo.metadatatype.class: 'Bigfoot\Bundle\SeoBundle\Form\MetadataType'
+    bigfoot_seo.metadataparametertype.class: 'Bigfoot\Bundle\SeoBundle\Form\MetadataParameterType'
+
+services:
+    form.type.metadata:
+        class: '%bigfoot_seo.metadatatype.class%'
+        arguments: [@service_container]
+        tags:
+            - { name: form.type, alias: metadata }
+
+    form.type.metadataparameter:
+            class: '%bigfoot_seo.metadataparametertype.class%'
+            arguments: [@service_container]
+            tags:
+                - { name: form.type, alias: metadataparameter }
+
+    kernel.listener.bigfoot_seo_menu_listener:
+        class: Bigfoot\Bundle\SeoBundle\Listener\MenuListener
+        tags:
+            - { name: kernel.event_listener, event: bigfoot.menu.generate, method: onMenuGenerate }

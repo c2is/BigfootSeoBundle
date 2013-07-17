@@ -31,7 +31,8 @@ class MetadataParameter
 
     /**
      * @ORM\ManyToMany(targetEntity="Parameter", cascade={"persist"})
-     **/
+     * @ORM\JoinTable(name="metadata_parameter_parameter")
+     */
     private $parameters;
 
 

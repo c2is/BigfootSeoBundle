@@ -47,13 +47,16 @@ class MetadataController extends Controller
     public function createAction(Request $request)
     {
         if($request->isXmlHttpRequest()) {
+
+
             $route_name = $request->get('route_name');
 
             $em = $this->getDoctrine()->getManager();
 
             $metadataParameter = $em->getRepository('BigfootSeoBundle:MetadataParameter')->findOneBy(array('route' => $route_name));
 
-            if ($metadataParameter) {
+            if ($metadataParameter != null) {
+
                 $tabParameters = $metadataParameter->getParameters();
 
                 $tabReturn = array();
@@ -63,9 +66,10 @@ class MetadataController extends Controller
                 }
 
                 return new Response($this->container->get('templating')->render('BigfootSeoBundle:Ajax:parameters.html.twig',array('tabParameters' => $tabReturn)));
+
             }
             else {
-                return array();
+                return new Response();
             }
         }
 
@@ -233,3 +237,4 @@ class MetadataController extends Controller
     }
 
 }
+

@@ -1,5 +1,7 @@
 {% if tabParameters %}
+    {{ 'Paramètre(s) disponible(s) : ' | trans }}
     {% for parameter in tabParameters %}
-        {{ parameter }}<br />
+        :{{ parameter }}:<br />
     {% endfor %}
+    <br />
 {% endif %}

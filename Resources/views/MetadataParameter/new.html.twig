@@ -1,35 +1,49 @@
-{% extends 'BigfootCoreBundle::base.html.twig' %}
+{% extends '::base.html.twig' %}
 
-{% block body -%}
-    <h1>MetadataParameter creation</h1>
+{% block body %}
 
     <form action="{{ path('admin_parameter_metadataparameter_create') }}" method="post" {{ form_enctype(form) }}>
 
-        {{ form_row(form.route) }}
+        <div class="widget">
+            <div class="widget-head">
+                <div class="pull-left">{{ 'MetadataParameter creation' | trans }}</div>
+                <div class="clearfix"></div>
+            </div>
 
-        <h3>Parameters</h3>
-        <ul class="parameters" data-prototype="{{ form_widget(form.parameters.vars.prototype)|e }}">
-            {% for parameter in form.parameters %}
-                <li>{{ form_row(parameter.name) }}</li>
-            {% endfor %}
-        </ul>
+            <div class="widget-content">
+                <div class="padd">
 
-        {{ form_rest(form) }}
+                    {{ form_errors(form) }}
 
-        <p>
-            <button type="submit">Create</button>
-        </p>
+                    {{ form_row(form.route) }}
+
+                    <h4>{{ 'Parameters' | trans }}</h4>
+                    <ul class="parameters" data-prototype="{{ form_widget(form.parameters.vars.prototype)|e }}">
+                        {% for parameter in form.parameters %}
+                            <li>
+                                {{ form_row(parameter.name) }}<br />
+                                {{ form_row(parameter.description) }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+
+                    <div style="display:none;">{{ form_rest(form) }}</div>
+
+                </div>
+            </div>
+
+            <div class="widget-foot">
+                <button class="btn" type="submit">{{ 'Create' | trans }}</button>
+                <a href="{{ path('admin_parameter_metadataparameter') }}" class="btn">{{ 'Cancel' | trans }}</a>
+                <div class="clearfix"></div>
+            </div>
+        </div>
     </form>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('admin_parameter_metadataparameter') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
-
 {% endblock %}
+
+
 
 {% block javascripts %}
     <script src="{{ asset('bundles/bigfootseo/js/seo_scripts.js') }}"></script>

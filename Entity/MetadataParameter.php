@@ -25,13 +25,14 @@ class MetadataParameter
     /**
      * @var string
      *
-     * @ORM\Column(name="route", type="string", length=255)
+     * @ORM\Column(name="route", type="string", length=255, unique=true)
      */
     private $route;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Parameter", cascade={"persist"})
-     **/
+     * @ORM\ManyToMany(targetEntity="Parameter", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="metadata_parameter_parameter")
+     */
     private $parameters;
 
 

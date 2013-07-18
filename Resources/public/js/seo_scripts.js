@@ -1,6 +1,6 @@
 var collectionHolder = $('ul.parameters');
 
-var $addParameterLink = $('<a href="#" class="add_parameter_link">Ajouter un paramètre</a>');
+var $addParameterLink = $('<a href="#" class="btn">Ajouter un paramètre</a>');
 var $newLinkLi = $('<li></li>').append($addParameterLink);
 
 jQuery(document).ready(function() {
@@ -16,23 +16,29 @@ jQuery(document).ready(function() {
         addParameterForm(collectionHolder, $newLinkLi);
     });
 
+    // Initiate the available parameters
+    displayAvailableParameters($('#metadata_route option:first').val());
+
 
     // OnChange Event on the route_id select (new Metadata)
     $('#metadata_route').change(function() {
-
-        var currentForm = $(this).parent().parent('form');
-
-        $.ajax({
-            url: currentForm.attr('action'),
-            type: currentForm.attr('method'),
-            data: { route_name : $(this).val() },
-            cache: false,
-            success: function(data) {
-                $('#list_parameters').html(data);
-            }
-        });
+        displayAvailableParameters($(this).val());
     });
 });
+
+function displayAvailableParameters(value) {
+    var currentForm = $('#metadata_form_new');
+
+    $.ajax({
+        url: currentForm.attr('action'),
+        type: currentForm.attr('method'),
+        data: { route_name : value },
+        cache: false,
+        success: function(data) {
+            $('#list_parameters').html(data);
+        }
+    });
+}
 
 
 function addParameterForm(collectionHolder, $newLinkLi) {
@@ -48,7 +54,7 @@ function addParameterForm(collectionHolder, $newLinkLi) {
 
 function addParameterFormDeleteLink($parameterFormLi) {
 
-    var $removeFormA = $('<a href="#">Supprimer ce paramètre</a>');
+    var $removeFormA = $('<a href="#" class="btn">Supprimer ce paramètre</a>');
     $parameterFormLi.append($removeFormA);
 
     $removeFormA.on('click', function(e) {

@@ -34,7 +34,7 @@ class MetadataType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $routes = $this->container->get('route_manager')->getArrayRoutes();
+        $routes = $this->container->get('bigfoot.route_manager')->getArrayRoutes();
 
         $builder
             ->add('route','choice',array(

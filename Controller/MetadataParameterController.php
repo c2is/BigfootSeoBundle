@@ -2,6 +2,7 @@
 
 namespace Bigfoot\Bundle\SeoBundle\Controller;
 
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -10,6 +11,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Bigfoot\Bundle\SeoBundle\Entity\MetadataParameter;
 use Bigfoot\Bundle\SeoBundle\Form\MetadataParameterType;
 use Bigfoot\Bundle\SeoBundle\Entity\Parameter;
+use Bigfoot\Bundle\CoreBundle\Theme\Menu\Item;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * MetadataParameter controller.
@@ -32,6 +35,8 @@ class MetadataParameterController extends Controller
 
         $entities = $em->getRepository('BigfootSeoBundle:MetadataParameter')->findAll();
 
+        $this->container->get('bigfoot.theme')['page_content']['globalActions']->addItem(new Item('crud_add', 'Add a metadata parameter', 'admin_parameter_metadataparameter_new'));
+
         return array(
             'entities' => $entities,
         );
@@ -47,14 +52,33 @@ class MetadataParameterController extends Controller
     {
         $entity  = new MetadataParameter();
         $form = $this->createForm('metadataparameter', $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
+
+            $post = $request->request->get('metadataparameter');
+
+            $route = $post['route'];
+
+            $em = $this->getDoctrine()->getManager();
+
+            $uniqueRoute = $em->getRepository('BigfootSeoBundle:MetadataParameter')->findOneBy(array('route' => $route));
+
+            if ($uniqueRoute) {
+
+                $form->get('route')->addError(new FormError('Des paramètres ont déjà été créés pour cette route'));
+
+                return array(
+                    'entity' => $entity,
+                    'form'   => $form->createView(),
+                );
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('admin_parameter_metadataparameter_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('admin_parameter_metadataparameter'));
         }
 
         return array(
@@ -203,7 +227,7 @@ class MetadataParameterController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm('metadataparameter', $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
@@ -221,25 +245,24 @@ class MetadataParameterController extends Controller
     /**
      * Deletes a MetadataParameter entity.
      *
-     * @Route("/{id}", name="admin_parameter_metadataparameter_delete")
-     * @Method("DELETE")
+     * @Route("/delete/{id}", name="admin_parameter_metadataparameter_delete")
+     * @Method("GET")
      */
     public function deleteAction(Request $request, $id)
     {
+
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('BigfootSeoBundle:MetadataParameter')->find($id);
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('BigfootSeoBundle:MetadataParameter')->find($id);
 
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find MetadataParameter entity.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find MetadataParameter entity.');
         }
+
+        $em->remove($entity);
+        $em->flush();
 
         return $this->redirect($this->generateUrl('admin_parameter_metadataparameter'));
     }

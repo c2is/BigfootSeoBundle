@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Bigfoot\Bundle\SeoBundle\Entity\Metadata;
 use Bigfoot\Bundle\SeoBundle\Entity\MetadataParameterRepository;
 use Bigfoot\Bundle\SeoBundle\Form\MetadataType;
+use Bigfoot\Bundle\CoreBundle\Theme\Menu\Item;
 
 /**
  * Metadata controller.
@@ -32,6 +33,8 @@ class MetadataController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('BigfootSeoBundle:Metadata')->findAll();
+
+        $this->container->get('bigfoot.theme')['page_content']['globalActions']->addItem(new Item('crud_add', 'Add a metadata', 'admin_seo_metadata_new'));
 
         return array(
             'entities' => $entities,
@@ -237,4 +240,3 @@ class MetadataController extends Controller
     }
 
 }
-

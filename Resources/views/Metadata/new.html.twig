@@ -1,29 +1,36 @@
 {% extends '::base.html.twig' %}
 
-{% block body -%}
-    <h1>Metadata creation</h1>
+{% block body %}
 
-    <div id="list_parameters"></div>
+<form action="{{ path('admin_seo_metadata_create') }}" method="post" {{ form_enctype(form) }} id="metadata_form_new">
 
-    <form action="{{ path('admin_seo_metadata_create') }}" method="post" {{ form_enctype(form) }}>
+    <div class="widget">
+        <div class="widget-head">
+            <div class="pull-left">{{ 'Metadata creation' | trans }}</div>
+            <div class="clearfix"></div>
+        </div>
 
-        {{ form_row(form.route) }}
+        <div class="widget-content">
+            <div class="padd">
 
-        {{ form_rest(form) }}
+                <div id="list_parameters"></div>
 
-        <p>
-            <button type="submit">Create</button>
-        </p>
-    </form>
+                {{ form_row(form.route) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('admin_seo_metadata') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
+                {{ form_rest(form) }}
+            </div>
+        </div>
+
+        <div class="widget-foot">
+            <button class="btn" type="submit">{{ 'Create' | trans }}</button>
+            <a href="{{ path('admin_seo_metadata') }}" class="btn">{{ 'Cancel' | trans }}</a>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</form>
+
 {% endblock %}
+
 
 {% block javascripts %}
     <script src="{{ asset('bundles/bigfootseo/js/seo_scripts.js') }}"></script>

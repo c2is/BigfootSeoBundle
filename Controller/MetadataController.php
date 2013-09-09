@@ -20,7 +20,6 @@ use Bigfoot\Bundle\CoreBundle\Theme\Menu\Item;
  */
 class MetadataController extends Controller
 {
-
     /**
      * Lists all Metadata entities.
      *
@@ -40,6 +39,7 @@ class MetadataController extends Controller
             'entities' => $entities,
         );
     }
+
     /**
      * Creates a new Metadata entity.
      *
@@ -238,5 +238,4 @@ class MetadataController extends Controller
             ->getForm()
         ;
     }
-
 }

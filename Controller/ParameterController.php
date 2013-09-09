@@ -17,7 +17,6 @@ use Bigfoot\Bundle\SeoBundle\Form\ParameterType;
  */
 class ParameterController extends Controller
 {
-
     /**
      * Lists all Parameter entities.
      *

@@ -20,9 +20,17 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('bigfoot_seo');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode
+            ->children()
+                ->arrayNode('default')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('meta_title')->defaultValue('')->end()
+                        ->scalarNode('meta_description')->defaultValue('')->end()
+                        ->scalarNode('meta_keywords')->defaultValue('')->end()
+                    ->end()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }

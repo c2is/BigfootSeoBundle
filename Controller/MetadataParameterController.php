@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class MetadataParameterController extends Controller
 {
-
     /**
      * Lists all MetadataParameter entities.
      *
@@ -41,6 +40,7 @@ class MetadataParameterController extends Controller
             'entities' => $entities,
         );
     }
+
     /**
      * Creates a new MetadataParameter entity.
      *
@@ -148,7 +148,6 @@ class MetadataParameterController extends Controller
             throw $this->createNotFoundException('Unable to find MetadataParameter entity.');
         }
 
-
         $originalParameters = array();
 
         // Crée un tableau contenant les objets Tag courants de la
@@ -196,8 +195,6 @@ class MetadataParameterController extends Controller
             }
         }
 
-
-
         $editForm = $this->createForm('metadataparameter', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
@@ -242,6 +239,7 @@ class MetadataParameterController extends Controller
             'delete_form' => $deleteForm->createView(),
         );
     }
+
     /**
      * Deletes a MetadataParameter entity.
      *

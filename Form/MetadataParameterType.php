@@ -2,6 +2,7 @@
 
 namespace Bigfoot\Bundle\SeoBundle\Form;
 
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -12,14 +13,16 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  */
 class MetadataParameterType extends AbstractType
 {
-
+    /**
+     * @var \Symfony\Component\DependencyInjection\Container
+     */
     protected $container;
 
     /**
      * Constructor
      * @param $container
      */
-    public function __construct($container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
     }
@@ -47,8 +50,6 @@ class MetadataParameterType extends AbstractType
             'by_reference' => false,
 
         ));
-
-
     }
 
     /**

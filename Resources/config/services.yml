@@ -19,3 +19,6 @@ services:
         class: Bigfoot\Bundle\SeoBundle\Listener\MenuListener
         tags:
             - { name: kernel.event_listener, event: bigfoot.menu.generate, method: onMenuGenerate }
+    bigfoot_seo.helper:
+        class: Bigfoot\Bundle\SeoBundle\Helper\SeoHelper
+        arguments: [ @service_container ]

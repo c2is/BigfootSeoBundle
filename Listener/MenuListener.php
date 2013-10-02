@@ -18,8 +18,8 @@ class MenuListener
 
         if ($menu->getName() == 'sidebar_menu') {
 
-            $menu->addItem(new Item('metadata', 'Seo','admin_seo_metadata'));
-            $menu->addOnItem('sidebar_settings',new Item('sidebar_settings_metadata_parameter', 'Seo Parameters','admin_parameter_metadataparameter'));
+            $menu->addItem(new Item('metadata', 'Seo','admin_seo_metadata', array(), array(), 'rocket'));
+            $menu->addOnItem('sidebar_settings',new Item('sidebar_settings_metadata_parameter', 'Seo Parameters', 'admin_parameter_metadataparameter', array(), array(), 'rocket'));
         }
 
     }

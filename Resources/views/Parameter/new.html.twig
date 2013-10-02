@@ -1,6 +1,6 @@
-{% extends bigfoot_theme_values.bundle~'::base.html.twig' %}
+{% extends bigfoot_theme_bundle~'::base.html.twig' %}
 
-{% block body -%}
+{% block content -%}
     <h1>Parameter creation</h1>
 
     <form action="{{ path('admin_parameter_metadata_parameter_create') }}" method="post" {{ form_enctype(form) }}>

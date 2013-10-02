@@ -64,7 +64,11 @@ class SeoHelper
             'keywords',
         );
 
-        $this->request = $container->get('request');
+        if ($container->isScopeActive('request')) {
+            $this->request = $container->get('request');
+        } else {
+            $this->request = new Request();
+        }
 
         $this->entityManager = $container->get('doctrine')->getManager();
 

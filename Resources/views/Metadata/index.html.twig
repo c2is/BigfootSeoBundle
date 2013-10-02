@@ -1,7 +1,6 @@
 {% extends bigfoot_theme_bundle~'::base.html.twig' %}
 
-
-{% block body %}
+{% block content %}
     {% include 'BigfootCoreBundle:crud:list.html.twig' with {
     'action_edit': 'admin_seo_metadata_edit',
     'list_title': 'Metadata list',

@@ -1,6 +1,6 @@
 {% extends bigfoot_theme_bundle~'::base.html.twig' %}
 
-{% block body %}
+{% block content %}
     {% include 'BigfootCoreBundle:crud:form.html.twig' with {
     'action_route': path('admin_seo_metadata_update', { 'id': entity.id }),
     'action_name': 'Edit',

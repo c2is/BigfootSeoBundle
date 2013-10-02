@@ -34,7 +34,8 @@ class MetadataParameterController extends Controller
 
         $entities = $em->getRepository('BigfootSeoBundle:MetadataParameter')->findAll();
 
-        $this->container->get('bigfoot.theme')['page_content']['globalActions']->addItem(new Item('crud_add', 'Add a metadata parameter', 'admin_parameter_metadataparameter_new'));
+        $theme = $this->container->get('bigfoot.theme');
+        $theme['page_content']['globalActions']->addItem(new Item('crud_add', 'Add a metadata parameter', 'admin_parameter_metadataparameter_new'));
 
         return array(
             'entities' => $entities,

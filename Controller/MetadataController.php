@@ -33,7 +33,8 @@ class MetadataController extends Controller
 
         $entities = $em->getRepository('BigfootSeoBundle:Metadata')->findAll();
 
-        $this->container->get('bigfoot.theme')['page_content']['globalActions']->addItem(new Item('crud_add', 'Add a metadata', 'admin_seo_metadata_new'));
+        $theme = $this->container->get('bigfoot.theme');
+        $theme['page_content']['globalActions']->addItem(new Item('crud_add', 'Add a metadata', 'admin_seo_metadata_new'));
 
         return array(
             'entities' => $entities,

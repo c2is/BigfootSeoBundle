@@ -33,5 +33,6 @@
 
 
 {% block javascripts %}
+    {{ parent() }}
     <script src="{{ asset('bundles/bigfootseo/js/seo_scripts.js') }}"></script>
 {% endblock %}

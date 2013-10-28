@@ -21,9 +21,34 @@ use Bigfoot\Bundle\CoreBundle\Theme\Menu\Item;
 class MetadataController extends Controller
 {
     /**
+     * Lists all parameters for a given route.
+     *
+     * @Route("/parameters/{route}", name="admin_seo_list_parameters", defaults={"route": null})
+     * @Method("GET")
+     * @Template("BigfootSeoBundle:Ajax:parameters.html.twig")
+     */
+    public function listParametersAction(Request $request, $route)
+    {
+        $parameters = array();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $metadataParameter = $em->getRepository('BigfootSeoBundle:MetadataParameter')->findOneBy(array('route' => $route));
+        if ($metadataParameter) {
+            $tabParameters = $metadataParameter->getParameters();
+
+            foreach ($tabParameters as $parameter) {
+                $parameters[] = $parameter->getName();
+            }
+        }
+
+        return array('parameters' => $parameters);
+    }
+
+    /**
      * Lists all Metadata entities.
      *
-     * @Route("/", name="admin_seo_metadata", options={"label"="Liste des Méta-données"})
+     * @Route("/", name="admin_seo_metadata")
      * @Method("GET")
      * @Template()
      */
@@ -37,46 +62,22 @@ class MetadataController extends Controller
         $theme['page_content']['globalActions']->addItem(new Item('crud_add', 'Add a metadata', 'admin_seo_metadata_new'));
 
         return array(
-            'entities' => $entities,
+            'list_items'        => $entities,
+            'list_edit_route'   => 'admin_seo_metadata_edit',
+            'list_title'        => 'Metadata list',
+            'list_fields'       => array('id' => 'ID', 'route' => 'Route', 'title'=> 'Title', 'description' => 'Description', 'keywords' => 'Keywords'),
         );
     }
 
     /**
      * Creates a new Metadata entity.
      *
-     * @Route("/", name="admin_seo_metadata_create", options={"label"="Create Route"})
+     * @Route("/", name="admin_seo_metadata_create")
      * @Method("POST")
      * @Template("BigfootSeoBundle:Metadata:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        if($request->isXmlHttpRequest()) {
-
-
-            $route_name = $request->get('route_name');
-
-            $em = $this->getDoctrine()->getManager();
-
-            $metadataParameter = $em->getRepository('BigfootSeoBundle:MetadataParameter')->findOneBy(array('route' => $route_name));
-
-            if ($metadataParameter != null) {
-
-                $tabParameters = $metadataParameter->getParameters();
-
-                $tabReturn = array();
-
-                foreach ($tabParameters as $parameter) {
-                    $tabReturn[] = $parameter->getName();
-                }
-
-                return new Response($this->container->get('templating')->render('BigfootSeoBundle:Ajax:parameters.html.twig',array('tabParameters' => $tabReturn)));
-
-            }
-            else {
-                return new Response();
-            }
-        }
-
         $entity  = new Metadata();
         $form = $this->createForm('metadata', $entity);
         $form->submit($request);
@@ -86,7 +87,7 @@ class MetadataController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('admin_seo_metadata_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('admin_seo_metadata'));
         }
 
         return array(
@@ -100,7 +101,7 @@ class MetadataController extends Controller
      *
      * @Route("/new", name="admin_seo_metadata_new")
      * @Method("GET")
-     * @Template()
+     * @Template("BigfootSeoBundle:Metadata:edit.html.twig")
      */
     public function newAction()
     {
@@ -108,8 +109,13 @@ class MetadataController extends Controller
         $form   = $this->createForm('metadata', $entity);
 
         return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+            'form'              => $form->createView(),
+            'form_method'       => 'POST',
+            'form_action'       => $this->generateUrl('admin_seo_metadata_create'),
+            'form_submit'       => 'Submit',
+            'form_title'        => 'Metadata creation',
+            'form_cancel_route' => 'admin_seo_metadata',
+            'parameters_url'    => $this->generateUrl('admin_seo_list_parameters'),
         );
     }
 
@@ -159,9 +165,15 @@ class MetadataController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'form'                  => $editForm->createView(),
+            'form_method'           => 'PUT',
+            'form_action'           => $this->generateUrl('admin_seo_metadata_update', array('id' => $entity->getId())),
+            'form_submit'           => 'Edit',
+            'form_title'            => 'Metadata edit',
+            'form_cancel_route'     => 'admin_seo_metadata',
+            'delete_form'           => $deleteForm->createView(),
+            'delete_form_action'    =>  $this->generateUrl('admin_seo_metadata_delete', array('id' => $entity->getId())),
+            'parameters_url'        => $this->generateUrl('admin_seo_list_parameters'),
         );
     }
 
@@ -190,13 +202,17 @@ class MetadataController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('admin_seo_metadata_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('admin_seo_metadata'));
         }
 
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'form'              => $editForm->createView(),
+            'form_method'       => 'PUT',
+            'form_action'       => $this->generateUrl('admin_seo_metadata_update', array('id' => $entity->getId())),
+            'form_submit'       => 'Edit',
+            'form_title'        => 'Metadata edit',
+            'form_cancel_route' => 'admin_seo_metadata',
+            'delete_form'       => $deleteForm->createView(),
         );
     }
     /**

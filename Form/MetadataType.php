@@ -40,7 +40,10 @@ class MetadataType extends AbstractType
 
         $builder
             ->add('route','choice',array(
-                'choices' => $routes
+                'choices' => $routes,
+                'attr' => array(
+                    'class' => 'seo-metadata-route-choice',
+                ),
             ));
 
         $builder

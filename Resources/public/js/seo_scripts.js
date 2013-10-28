@@ -17,22 +17,23 @@ jQuery(document).ready(function() {
     });
 
     // Initiate the available parameters
-    displayAvailableParameters($('#metadata_route option:first').val());
+    $selectRoute = $('select.seo-metadata-route-choice');
+    displayAvailableParameters($selectRoute.val());
 
 
     // OnChange Event on the route_id select (new Metadata)
-    $('#metadata_route').change(function() {
+    $selectRoute.change(function() {
         displayAvailableParameters($(this).val());
     });
 });
 
 function displayAvailableParameters(value) {
-    var currentForm = $('#metadata_form_new');
+    var $container = $('#list_parameters');
+    var $form = $container.closest('form');
 
     $.ajax({
-        url: currentForm.attr('action'),
-        type: currentForm.attr('method'),
-        data: { route_name : value },
+        url: $container.data('url')+'/'+value,
+        type: 'GET',
         cache: false,
         success: function(data) {
             $('#list_parameters').html(data);

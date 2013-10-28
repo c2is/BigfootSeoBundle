@@ -1,7 +1,8 @@
-{% if tabParameters %}
+{% if parameters is defined and parameters %}
     {{ 'Available parameters : ' | trans }}
-    {% for parameter in tabParameters %}
-        :{{ parameter }}:<br />
+    <ul>
+    {% for parameter in parameters %}
+        <li>:{{ parameter }}:</li>
     {% endfor %}
-    <br />
+    </ul>
 {% endif %}

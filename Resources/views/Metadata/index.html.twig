@@ -1,9 +1,1 @@
-{% extends bigfoot_theme_bundle~'::base.html.twig' %}
-
-{% block content %}
-    {% include [bigfoot_theme_bundle~':crud:list.html.twig', 'BigfootCoreBundle:crud:list.html.twig'] with {
-    'action_edit': 'admin_seo_metadata_edit',
-    'list_title': 'Metadata list',
-    'fieldsList': {id: 'ID', route: 'Route', title: 'Title', description: 'Description', keywords: 'Keywords'}
-    } %}
-{% endblock %}
+{% extends bigfoot_theme_bundle~'::base.list.html.twig' %}

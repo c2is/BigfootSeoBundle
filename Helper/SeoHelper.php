@@ -90,7 +90,7 @@ class SeoHelper
         $routes = $this->routeManager->getRoutes();
 
         if (array_key_exists($route, $routes)) {
-            $repository = $this->entityManager->getRepository('BigfootSeoMetadata');
+            $repository = $this->entityManager->getRepository('BigfootSeoBundle:Metadata');
             $metadata = $repository->findOneByRoute($route);
 
             if ($metadata) {

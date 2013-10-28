@@ -2,6 +2,7 @@
 
 namespace Bigfoot\Bundle\SeoBundle\Entity;
 
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,6 +32,7 @@ class Metadata
     /**
      * @var string
      *
+     * @Gedmo\Translatable
      * @ORM\Column(name="title", type="string", length=255)
      */
     private $title;
@@ -38,6 +40,7 @@ class Metadata
     /**
      * @var string
      *
+     * @Gedmo\Translatable
      * @ORM\Column(name="description", type="text")
      */
     private $description;
@@ -45,10 +48,15 @@ class Metadata
     /**
      * @var string
      *
+     * @Gedmo\Translatable
      * @ORM\Column(name="keywords", type="text")
      */
     private $keywords;
 
+    /**
+     * @Gedmo\Locale
+     */
+    private $locale;
 
     /**
      * Get id
@@ -150,5 +158,13 @@ class Metadata
     public function getKeywords()
     {
         return $this->keywords;
+    }
+
+    /**
+     * @param $locale The object's locale.
+     */
+    public function setTranslatableLocale($locale)
+    {
+        $this->locale = $locale;
     }
 }

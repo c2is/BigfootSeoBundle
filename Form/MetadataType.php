@@ -47,6 +47,7 @@ class MetadataType extends AbstractType
             ->add('title')
             ->add('description')
             ->add('keywords')
+            ->add('translation', 'translatable_entity')
         ;
     }
 

@@ -36,9 +36,19 @@ class MetadataParameterController extends Controller
 
         $theme = $this->container->get('bigfoot.theme');
         $theme['page_content']['globalActions']->addItem(new Item('crud_add', 'Add a metadata parameter', 'admin_parameter_metadataparameter_new'));
-
+  /*
+        Id' | trans }}</th>
+                <th>{{ 'Route' | trans }}</th>
+                <th>{{ 'Parameters
+*/
         return array(
-            'entities' => $entities,
+            'list_title'    => 'MetadataParameter list',
+            'list_items'    => $entities,
+            'list_fields'   => array(
+                'id' => 'ID',
+                'route' => 'Route',
+                'parameters' => 'Parameters',
+            ),
         );
     }
 
@@ -102,33 +112,11 @@ class MetadataParameterController extends Controller
         $form   = $this->createForm('metadataparameter', $entity);
 
         return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-    }
-
-    /**
-     * Finds and displays a MetadataParameter entity.
-     *
-     * @Route("/{id}", name="admin_parameter_metadataparameter_show")
-     * @Method("GET")
-     * @Template()
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('BigfootSeoBundle:MetadataParameter')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find MetadataParameter entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
+            'form'              => $form->createView(),
+            'form_action'       => $this->generateUrl('admin_parameter_metadataparameter_create', array('id' => $entity->getId())),
+            'form_method'       => 'POST',
+            'form_title'        => 'MetadataParameter creation',
+            'form_cancel_route' => 'admin_parameter_metadataparameter',
         );
     }
 

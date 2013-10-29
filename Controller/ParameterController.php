@@ -3,206 +3,109 @@
 namespace Bigfoot\Bundle\SeoBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Bigfoot\Bundle\CoreBundle\Crud\CrudController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Bigfoot\Bundle\SeoBundle\Entity\Parameter;
-use Bigfoot\Bundle\SeoBundle\Form\ParameterType;
 
 /**
  * Parameter controller.
  *
- * @Route("/admin/parameter/metadata/parameter")
+ * @Route("/admin/seo/parameter")
  */
-class ParameterController extends Controller
+class ParameterController extends CrudController
 {
+    /**
+     * @return string
+     */
+    protected function getName()
+    {
+        return 'admin_seo_parameter';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getEntity()
+    {
+        return 'BigfootSeoBundle:Parameter';
+    }
+
+    protected function getFields()
+    {
+        return array('id' => 'ID');
+    }
     /**
      * Lists all Parameter entities.
      *
-     * @Route("/", name="admin_parameter_metadata_parameter")
+     * @Route("/", name="admin_seo_parameter")
      * @Method("GET")
-     * @Template()
+     * @Template("BigfootCoreBundle:crud:index.html.twig")
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('BigfootSeoBundle:Parameter')->findAll();
-
-        return array(
-            'entities' => $entities,
-        );
+        return $this->doIndex();
     }
     /**
      * Creates a new Parameter entity.
      *
-     * @Route("/", name="admin_parameter_metadata_parameter_create")
+     * @Route("/", name="admin_seo_parameter_create")
      * @Method("POST")
-     * @Template("BigfootSeoBundle:Parameter:new.html.twig")
+     * @Template("BigfootCoreBundle:crud:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity  = new Parameter();
-        $form = $this->createForm(new ParameterType(), $entity);
-        $form->bind($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('admin_parameter_metadata_parameter_show', array('id' => $entity->getId())));
-        }
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
+        return $this->doCreate($request);
     }
 
     /**
      * Displays a form to create a new Parameter entity.
      *
-     * @Route("/new", name="admin_parameter_metadata_parameter_new")
+     * @Route("/new", name="admin_seo_parameter_new")
      * @Method("GET")
-     * @Template()
+     * @Template("BigfootCoreBundle:crud:new.html.twig")
      */
     public function newAction()
     {
-        $entity = new Parameter();
-        $form   = $this->createForm(new ParameterType(), $entity);
 
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-    }
-
-    /**
-     * Finds and displays a Parameter entity.
-     *
-     * @Route("/{id}", name="admin_parameter_metadata_parameter_show")
-     * @Method("GET")
-     * @Template()
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('BigfootSeoBundle:Parameter')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Parameter entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
-        );
+        return $this->doNew();
     }
 
     /**
      * Displays a form to edit an existing Parameter entity.
      *
-     * @Route("/{id}/edit", name="admin_parameter_metadata_parameter_edit")
+     * @Route("/{id}/edit", name="admin_seo_parameter_edit")
      * @Method("GET")
-     * @Template()
+     * @Template("BigfootCoreBundle:crud:edit.html.twig")
      */
     public function editAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('BigfootSeoBundle:Parameter')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Parameter entity.');
-        }
-
-        $editForm = $this->createForm(new ParameterType(), $entity);
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
+        return $this->doEdit($id);
     }
 
     /**
      * Edits an existing Parameter entity.
      *
-     * @Route("/{id}", name="admin_parameter_metadata_parameter_update")
+     * @Route("/{id}", name="admin_seo_parameter_update")
      * @Method("PUT")
-     * @Template("BigfootSeoBundle:Parameter:edit.html.twig")
+     * @Template("BigfootCoreBundle:crud:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
-        $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('BigfootSeoBundle:Parameter')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Parameter entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new ParameterType(), $entity);
-        $editForm->bind($request);
-
-        if ($editForm->isValid()) {
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('admin_parameter_metadata_parameter_edit', array('id' => $id)));
-        }
-
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
+        return $this->doUpdate($request, $id);
     }
     /**
      * Deletes a Parameter entity.
      *
-     * @Route("/{id}", name="admin_parameter_metadata_parameter_delete")
+     * @Route("/{id}", name="admin_seo_parameter_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
     {
-        $form = $this->createDeleteForm($id);
-        $form->bind($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('BigfootSeoBundle:Parameter')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Parameter entity.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
-        }
-
-        return $this->redirect($this->generateUrl('admin_parameter_metadata_parameter'));
-    }
-
-    /**
-     * Creates a form to delete a Parameter entity by id.
-     *
-     * @param mixed $id The entity id
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder(array('id' => $id))
-            ->add('id', 'hidden')
-            ->getForm()
-        ;
-    }
+    return $this->doDelete($request, $id);
+}
 }

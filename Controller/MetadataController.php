@@ -120,31 +120,6 @@ class MetadataController extends Controller
     }
 
     /**
-     * Finds and displays a Metadata entity.
-     *
-     * @Route("/{id}", name="admin_seo_metadata_show")
-     * @Method("GET")
-     * @Template()
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('BigfootSeoBundle:Metadata')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Metadata entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
-
-    /**
      * Displays a form to edit an existing Metadata entity.
      *
      * @Route("/{id}/edit", name="admin_seo_metadata_edit")

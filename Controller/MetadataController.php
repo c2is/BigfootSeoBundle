@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Bigfoot\Bundle\SeoBundle\Entity\Metadata;
 use Bigfoot\Bundle\SeoBundle\Entity\MetadataParameterRepository;
 use Bigfoot\Bundle\SeoBundle\Form\MetadataType;
@@ -16,6 +17,7 @@ use Bigfoot\Bundle\CoreBundle\Theme\Menu\Item;
 /**
  * Metadata controller.
  *
+ * @Cache(maxage="0", smaxage="0", public="false")
  * @Route("/admin/seo/metadata")
  */
 class MetadataController extends Controller

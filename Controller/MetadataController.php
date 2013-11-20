@@ -2,9 +2,12 @@
 
 namespace Bigfoot\Bundle\SeoBundle\Controller;
 
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -13,6 +16,7 @@ use Bigfoot\Bundle\SeoBundle\Entity\Metadata;
 use Bigfoot\Bundle\SeoBundle\Entity\MetadataParameterRepository;
 use Bigfoot\Bundle\SeoBundle\Form\MetadataType;
 use Bigfoot\Bundle\CoreBundle\Theme\Menu\Item;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Metadata controller.
@@ -20,8 +24,25 @@ use Bigfoot\Bundle\CoreBundle\Theme\Menu\Item;
  * @Cache(maxage="0", smaxage="0", public="false")
  * @Route("/admin/seo/metadata")
  */
-class MetadataController extends Controller
+class MetadataController implements ContainerAwareInterface
 {
+    /**
+     * @var Container
+     */
+    protected $container;
+
+    /**
+     * Sets the Container.
+     *
+     * @param ContainerInterface|null $container A ContainerInterface instance or null
+     *
+     * @api
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
     /**
      * Lists all parameters for a given route.
      *
@@ -33,7 +54,7 @@ class MetadataController extends Controller
     {
         $parameters = array();
 
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->container->get('doctrine')->getManager();
 
         $metadataParameter = $em->getRepository('BigfootSeoBundle:MetadataParameter')->findOneBy(array('route' => $route));
         if ($metadataParameter) {
@@ -56,12 +77,12 @@ class MetadataController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->container->get('doctrine')->getManager();
 
         $entities = $em->getRepository('BigfootSeoBundle:Metadata')->findAll();
 
         $theme = $this->container->get('bigfoot.theme');
-        $theme['page_content']['globalActions']->addItem(new Item('crud_add', 'Add a metadata', 'admin_seo_metadata_new'));
+        $theme['page_content']['globalActions']->addItem(new Item('crud_add', 'Add a metadata', 'admin_seo_metadata_new', array(), array(), 'file'));
 
         return array(
             'list_items'        => $entities,
@@ -81,15 +102,15 @@ class MetadataController extends Controller
     public function createAction(Request $request)
     {
         $entity  = new Metadata();
-        $form = $this->createForm('metadata', $entity);
+        $form = $this->container->get('form.factory')->create('metadata', $entity);
         $form->submit($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->container->get('doctrine')->getManager();
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('admin_seo_metadata'));
+            return new RedirectResponse($this->container->get('router')->generate('admin_seo_metadata'));
         }
 
         return array(
@@ -108,16 +129,16 @@ class MetadataController extends Controller
     public function newAction()
     {
         $entity = new Metadata();
-        $form   = $this->createForm('metadata', $entity);
+        $form   = $this->container->get('form.factory')->create('metadata', $entity);
 
         return array(
             'form'              => $form->createView(),
             'form_method'       => 'POST',
-            'form_action'       => $this->generateUrl('admin_seo_metadata_create'),
+            'form_action'       => $this->container->get('router')->generate('admin_seo_metadata_create'),
             'form_submit'       => 'Submit',
             'form_title'        => 'Metadata creation',
             'form_cancel_route' => 'admin_seo_metadata',
-            'parameters_url'    => $this->generateUrl('admin_seo_list_parameters'),
+            'parameters_url'    => $this->container->get('router')->generate('admin_seo_list_parameters'),
         );
     }
 
@@ -130,27 +151,27 @@ class MetadataController extends Controller
      */
     public function editAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->container->get('doctrine')->getManager();
 
         $entity = $em->getRepository('BigfootSeoBundle:Metadata')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Metadata entity.');
+            throw new NotFoundHttpException('Unable to find Metadata entity.');
         }
 
-        $editForm = $this->createForm('metadata', $entity);
+        $editForm = $this->container->get('form.factory')->create('metadata', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
             'form'                  => $editForm->createView(),
             'form_method'           => 'PUT',
-            'form_action'           => $this->generateUrl('admin_seo_metadata_update', array('id' => $entity->getId())),
+            'form_action'           => $this->container->get('router')->generate('admin_seo_metadata_update', array('id' => $entity->getId())),
             'form_submit'           => 'Edit',
             'form_title'            => 'Metadata edit',
             'form_cancel_route'     => 'admin_seo_metadata',
             'delete_form'           => $deleteForm->createView(),
-            'delete_form_action'    =>  $this->generateUrl('admin_seo_metadata_delete', array('id' => $entity->getId())),
-            'parameters_url'        => $this->generateUrl('admin_seo_list_parameters'),
+            'delete_form_action'    =>  $this->container->get('router')->generate('admin_seo_metadata_delete', array('id' => $entity->getId())),
+            'parameters_url'        => $this->container->get('router')->generate('admin_seo_list_parameters'),
         );
     }
 
@@ -163,29 +184,29 @@ class MetadataController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->container->get('doctrine')->getManager();
 
         $entity = $em->getRepository('BigfootSeoBundle:Metadata')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Metadata entity.');
+            throw new NotFoundHttpException('Unable to find Metadata entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm('metadata', $entity);
+        $editForm = $this->container->get('form.factory')->create('metadata', $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('admin_seo_metadata'));
+            return new RedirectResponse($this->container->get('router')->generate('admin_seo_metadata'));
         }
 
         return array(
             'form'              => $editForm->createView(),
             'form_method'       => 'PUT',
-            'form_action'       => $this->generateUrl('admin_seo_metadata_update', array('id' => $entity->getId())),
+            'form_action'       => $this->container->get('router')->generate('admin_seo_metadata_update', array('id' => $entity->getId())),
             'form_submit'       => 'Edit',
             'form_title'        => 'Metadata edit',
             'form_cancel_route' => 'admin_seo_metadata',
@@ -204,18 +225,18 @@ class MetadataController extends Controller
         $form->submit($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->container->get('doctrine')->getManager();
             $entity = $em->getRepository('BigfootSeoBundle:Metadata')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Metadata entity.');
+                throw new NotFoundHttpException('Unable to find Metadata entity.');
             }
 
             $em->remove($entity);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('admin_seo_metadata'));
+        return new RedirectResponse($this->container->get('router')->generate('admin_seo_metadata'));
     }
 
     /**
@@ -227,7 +248,7 @@ class MetadataController extends Controller
      */
     private function createDeleteForm($id)
     {
-        return $this->createFormBuilder(array('id' => $id))
+        return $this->container->get('form.factory')->createBuilder('form', array('id' => $id))
             ->add('id', 'hidden')
             ->getForm()
         ;

@@ -2,9 +2,12 @@
 
 namespace Bigfoot\Bundle\SeoBundle\Controller;
 
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -14,6 +17,7 @@ use Bigfoot\Bundle\SeoBundle\Form\MetadataParameterType;
 use Bigfoot\Bundle\SeoBundle\Entity\Parameter;
 use Bigfoot\Bundle\CoreBundle\Theme\Menu\Item;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * MetadataParameter controller.
@@ -21,8 +25,25 @@ use Symfony\Component\HttpFoundation\Response;
  * @Cache(maxage="0", smaxage="0", public="false")
  * @Route("/admin/parameter/metadataparameter")
  */
-class MetadataParameterController extends Controller
+class MetadataParameterController implements ContainerAwareInterface
 {
+    /**
+     * @var Container
+     */
+    protected $container;
+
+    /**
+     * Sets the Container.
+     *
+     * @param ContainerInterface|null $container A ContainerInterface instance or null
+     *
+     * @api
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
     /**
      * Lists all MetadataParameter entities.
      *
@@ -32,7 +53,7 @@ class MetadataParameterController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->container->get('doctrine')->getManager();
 
         $entities = $em->getRepository('BigfootSeoBundle:MetadataParameter')->findAll();
 
@@ -64,7 +85,7 @@ class MetadataParameterController extends Controller
     public function createAction(Request $request)
     {
         $entity  = new MetadataParameter();
-        $form = $this->createForm('metadataparameter', $entity);
+        $form = $this->container->get('form.factory')->create('metadataparameter', $entity);
         $form->submit($request);
 
         if ($form->isValid()) {
@@ -73,7 +94,7 @@ class MetadataParameterController extends Controller
 
             $route = $post['route'];
 
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->container->get('doctrine')->getManager();
 
             $uniqueRoute = $em->getRepository('BigfootSeoBundle:MetadataParameter')->findOneBy(array('route' => $route));
 
@@ -87,11 +108,11 @@ class MetadataParameterController extends Controller
                 );
             }
 
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->container->get('doctrine')->getManager();
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('admin_parameter_metadataparameter'));
+            return new RedirectResponse($this->container->get('router')->generate('admin_parameter_metadataparameter'));
         }
 
         return array(
@@ -111,11 +132,11 @@ class MetadataParameterController extends Controller
     {
         $entity = new MetadataParameter();
 
-        $form   = $this->createForm('metadataparameter', $entity);
+        $form   = $this->container->get('form.factory')->create('metadataparameter', $entity);
 
         return array(
             'form'              => $form->createView(),
-            'form_action'       => $this->generateUrl('admin_parameter_metadataparameter_create', array('id' => $entity->getId())),
+            'form_action'       => $this->container->get('router')->generate('admin_parameter_metadataparameter_create', array('id' => $entity->getId())),
             'form_method'       => 'POST',
             'form_title'        => 'MetadataParameter creation',
             'form_cancel_route' => 'admin_parameter_metadataparameter',
@@ -131,12 +152,12 @@ class MetadataParameterController extends Controller
      */
     public function editAction($id, Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->container->get('doctrine')->getManager();
 
         $entity = $em->getRepository('BigfootSeoBundle:MetadataParameter')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find MetadataParameter entity.');
+            throw new NotFoundHttpException('Unable to find MetadataParameter entity.');
         }
 
         $originalParameters = array();
@@ -145,7 +166,7 @@ class MetadataParameterController extends Controller
         // base de données
         foreach ($entity->getParameters() as $parameter) $originalParameters[] = $parameter;
 
-        $editForm = $this->createForm('metadataparameter', $entity);
+        $editForm = $this->container->get('form.factory')->create('metadataparameter', $entity);
 
         if ($request->isMethod('POST')) {
             $editForm->submit($this->getRequest());
@@ -182,11 +203,11 @@ class MetadataParameterController extends Controller
                 $em->flush();
 
                 // redirige vers quelconque page d'édition
-                return $this->redirect($this->generateUrl('metadataparameter_edit', array('id' => $id)));
+                return new RedirectResponse($this->container->get('router')->generate('metadataparameter_edit', array('id' => $id)));
             }
         }
 
-        $editForm = $this->createForm('metadataparameter', $entity);
+        $editForm = $this->container->get('form.factory')->create('metadataparameter', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -205,23 +226,23 @@ class MetadataParameterController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->container->get('doctrine')->getManager();
 
         $entity = $em->getRepository('BigfootSeoBundle:MetadataParameter')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find MetadataParameter entity.');
+            throw new NotFoundHttpException('Unable to find MetadataParameter entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm('metadataparameter', $entity);
+        $editForm = $this->container->get('form.factory')->create('metadataparameter', $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('admin_parameter_metadataparameter_edit', array('id' => $id)));
+            return new RedirectResponse($this->container->get('router')->generate('admin_parameter_metadataparameter_edit', array('id' => $id)));
         }
 
         return array(
@@ -243,17 +264,17 @@ class MetadataParameterController extends Controller
         $form = $this->createDeleteForm($id);
         $form->submit($request);
 
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->container->get('doctrine')->getManager();
         $entity = $em->getRepository('BigfootSeoBundle:MetadataParameter')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find MetadataParameter entity.');
+            throw new NotFoundHttpException('Unable to find MetadataParameter entity.');
         }
 
         $em->remove($entity);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('admin_parameter_metadataparameter'));
+        return new RedirectResponse($this->container->get('router')->generate('admin_parameter_metadataparameter'));
     }
 
     /**
@@ -265,7 +286,7 @@ class MetadataParameterController extends Controller
      */
     private function createDeleteForm($id)
     {
-        return $this->createFormBuilder(array('id' => $id))
+        return $this->container->get('form.factory')->createBuilder('form', array('id' => $id))
             ->add('id', 'hidden')
             ->getForm()
         ;

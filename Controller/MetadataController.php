@@ -2,21 +2,20 @@
 
 namespace Bigfoot\Bundle\SeoBundle\Controller;
 
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+
+use Bigfoot\Bundle\CoreBundle\Controller\BaseController;
+use Bigfoot\Bundle\CoreBundle\Theme\Menu\Item;
 use Bigfoot\Bundle\SeoBundle\Entity\Metadata;
 use Bigfoot\Bundle\SeoBundle\Entity\MetadataParameterRepository;
 use Bigfoot\Bundle\SeoBundle\Form\MetadataType;
-use Bigfoot\Bundle\CoreBundle\Theme\Menu\Item;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Metadata controller.
@@ -24,25 +23,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @Cache(maxage="0", smaxage="0", public="false")
  * @Route("/admin/seo/metadata")
  */
-class MetadataController implements ContainerAwareInterface
+class MetadataController extends BaseController
 {
-    /**
-     * @var Container
-     */
-    protected $container;
-
-    /**
-     * Sets the Container.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
-     *
-     * @api
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
     /**
      * Lists all parameters for a given route.
      *

@@ -2,22 +2,21 @@
 
 namespace Bigfoot\Bundle\SeoBundle\Controller;
 
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Bigfoot\Bundle\SeoBundle\Entity\MetadataParameter;
-use Bigfoot\Bundle\SeoBundle\Form\MetadataParameterType;
-use Bigfoot\Bundle\SeoBundle\Entity\Parameter;
+
+use Bigfoot\Bundle\CoreBundle\Controller\BaseController;
 use Bigfoot\Bundle\CoreBundle\Theme\Menu\Item;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Bigfoot\Bundle\SeoBundle\Entity\MetadataParameter;
+use Bigfoot\Bundle\SeoBundle\Entity\Parameter;
+use Bigfoot\Bundle\SeoBundle\Form\MetadataParameterType;
 
 /**
  * MetadataParameter controller.
@@ -25,25 +24,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @Cache(maxage="0", smaxage="0", public="false")
  * @Route("/admin/parameter/metadataparameter")
  */
-class MetadataParameterController implements ContainerAwareInterface
+class MetadataParameterController extends BaseController
 {
-    /**
-     * @var Container
-     */
-    protected $container;
-
-    /**
-     * Sets the Container.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
-     *
-     * @api
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
     /**
      * Lists all MetadataParameter entities.
      *

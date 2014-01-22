@@ -3,11 +3,12 @@
 namespace Bigfoot\Bundle\SeoBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
-use Bigfoot\Bundle\CoreBundle\Crud\CrudController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+
+use Bigfoot\Bundle\CoreBundle\Controller\CrudController;
 
 /**
  * Parameter controller.

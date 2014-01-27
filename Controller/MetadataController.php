@@ -86,19 +86,6 @@ class MetadataController extends CrudController
     public function indexAction()
     {
         return $this->doIndex();
-        // $em = $this->container->get('doctrine')->getManager();
-
-        // $entities = $em->getRepository('BigfootSeoBundle:Metadata')->findAll();
-
-        // $theme = $this->container->get('bigfoot.theme');
-        // $theme['page_content']['globalActions']->addItem(new Item('crud_add', 'Add a metadata', 'admin_metadata_new', array(), array(), 'file'));
-
-        // return array(
-        //     'list_items'        => $entities,
-        //     'list_edit_route'   => 'admin_metadata_edit',
-        //     'list_title'        => 'Metadata list',
-        //     'list_fields'       => array('id' => 'ID', 'route' => 'Route', 'title'=> 'Title', 'description' => 'Description', 'keywords' => 'Keywords'),
-        // );
     }
 
     /**

@@ -8,17 +8,17 @@ services:
         arguments: [@service_container]
         tags:
             - { name: form.type, alias: metadata }
-
     form.type.metadataparameter:
             class: '%bigfoot_seo.metadataparametertype.class%'
             arguments: [@service_container]
             tags:
                 - { name: form.type, alias: metadataparameter }
-
-    kernel.listener.bigfoot_seo_menu_listener:
-        class: Bigfoot\Bundle\SeoBundle\Listener\MenuListener
-        tags:
-            - { name: kernel.event_listener, event: bigfoot.menu.generate, method: onMenuGenerate }
     bigfoot_seo.helper:
         class: Bigfoot\Bundle\SeoBundle\Helper\SeoHelper
         arguments: [ @service_container ]
+
+    # Menu Listener
+    bigfoot_seo.listener.menu:
+        class: Bigfoot\Bundle\SeoBundle\Listener\MenuListener
+        tags:
+            - { name: kernel.event_subscriber }

@@ -43,7 +43,6 @@ class ParameterController extends CrudController
      *
      * @Route("/", name="admin_seo_parameter")
      * @Method("GET")
-     * @Template("BigfootCoreBundle:Crud:index.html.twig")
      */
     public function indexAction()
     {
@@ -54,7 +53,6 @@ class ParameterController extends CrudController
      *
      * @Route("/", name="admin_seo_parameter_create")
      * @Method("POST")
-     * @Template("BigfootCoreBundle:Crud:form.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -67,7 +65,6 @@ class ParameterController extends CrudController
      *
      * @Route("/new", name="admin_seo_parameter_new")
      * @Method("GET")
-     * @Template("BigfootCoreBundle:Crud:form.html.twig")
      */
     public function newAction()
     {
@@ -80,7 +77,6 @@ class ParameterController extends CrudController
      *
      * @Route("/{id}/edit", name="admin_seo_parameter_edit")
      * @Method("GET")
-     * @Template("BigfootCoreBundle:Crud:form.html.twig")
      */
     public function editAction($id)
     {
@@ -92,8 +88,7 @@ class ParameterController extends CrudController
      * Edits an existing Parameter entity.
      *
      * @Route("/{id}", name="admin_seo_parameter_update")
-     * @Method("PUT")
-     * @Template("BigfootCoreBundle:Crud:form.html.twig")
+     * @Method("GET|POST|PUT")
      */
     public function updateAction(Request $request, $id)
     {
@@ -103,8 +98,8 @@ class ParameterController extends CrudController
     /**
      * Deletes a Parameter entity.
      *
-     * @Route("/{id}", name="admin_seo_parameter_delete")
-     * @Method("DELETE")
+     * @Route("/{id}/delete", name="admin_seo_parameter_delete")
+     * @Method("GET|DELETE")
      */
     public function deleteAction(Request $request, $id)
     {

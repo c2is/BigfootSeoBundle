@@ -61,7 +61,6 @@ class MetadataParameterController extends CrudController
      *
      * @Route("/", name="admin_parameter_metadataparameter")
      * @Method("GET")
-     * @Template("BigfootCoreBundle:Crud:index.html.twig")
      */
     public function indexAction()
     {
@@ -73,23 +72,20 @@ class MetadataParameterController extends CrudController
      *
      * @Route("/", name="admin_parameter_metadataparameter_create")
      * @Method("POST")
-     * @Template("BigfootSeoBundle:MetadataParameter:new.html.twig")
+     * @Template("BigfootSeoBundle:MetadataParameter:form.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity  = new MetadataParameter();
-        $form = $this->container->get('form.factory')->create('metadataparameter', $entity);
+        $entity = new MetadataParameter();
+        $form   = $this->container->get('form.factory')->create('metadataparameter', $entity);
         $form->submit($request);
 
         if ($form->isValid()) {
 
-            $post = $request->request->get('metadataparameter');
-
+            $post  = $request->request->get('metadataparameter');
             $route = $post['route'];
 
-            $em = $this->container->get('doctrine')->getManager();
-
-            $uniqueRoute = $em->getRepository('BigfootSeoBundle:MetadataParameter')->findOneBy(array('route' => $route));
+            $uniqueRoute = $this->getRepository('BigfootSeoBundle:MetadataParameter')->findOneBy(array('route' => $route));
 
             if ($uniqueRoute) {
 
@@ -101,9 +97,7 @@ class MetadataParameterController extends CrudController
                 );
             }
 
-            $em = $this->container->get('doctrine')->getManager();
-            $em->persist($entity);
-            $em->flush();
+            $this->persistAndFlush($entity);
 
             return new RedirectResponse($this->container->get('router')->generate('admin_parameter_metadataparameter'));
         }
@@ -119,12 +113,11 @@ class MetadataParameterController extends CrudController
      *
      * @Route("/new", name="admin_parameter_metadataparameter_new")
      * @Method("GET")
-     * @Template()
+     * @Template("BigfootSeoBundle:MetadataParameter:form.html.twig")
      */
     public function newAction()
     {
         $entity = new MetadataParameter();
-
         $form   = $this->container->get('form.factory')->create('metadataparameter', $entity);
 
         return array(
@@ -141,7 +134,7 @@ class MetadataParameterController extends CrudController
      *
      * @Route("/{id}/edit", name="admin_parameter_metadataparameter_edit")
      * @Method("GET")
-     * @Template()
+     * @Template("BigfootSeoBundle:MetadataParameter:form.html.twig")
      */
     public function editAction($id, Request $request)
     {
@@ -229,7 +222,7 @@ class MetadataParameterController extends CrudController
      *
      * @Route("/{id}", name="admin_parameter_metadataparameter_update")
      * @Method("PUT")
-     * @Template("BigfootSeoBundle:MetadataParameter:edit.html.twig")
+     * @Template("BigfootSeoBundle:MetadataParameter:form.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
@@ -263,39 +256,10 @@ class MetadataParameterController extends CrudController
      * Deletes a MetadataParameter entity.
      *
      * @Route("/delete/{id}", name="admin_parameter_metadataparameter_delete")
-     * @Method("GET")
+     * @Method("GET|DELETE")
      */
     public function deleteAction(Request $request, $id)
     {
-
-        $form = $this->createDeleteForm($id);
-        $form->submit($request);
-
-        $em = $this->container->get('doctrine')->getManager();
-        $entity = $em->getRepository('BigfootSeoBundle:MetadataParameter')->find($id);
-
-        if (!$entity) {
-            throw new NotFoundHttpException('Unable to find MetadataParameter entity.');
-        }
-
-        $em->remove($entity);
-        $em->flush();
-
-        return new RedirectResponse($this->container->get('router')->generate('admin_parameter_metadataparameter'));
-    }
-
-    /**
-     * Creates a form to delete a MetadataParameter entity by id.
-     *
-     * @param mixed $id The entity id
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm($id)
-    {
-        return $this->container->get('form.factory')->createBuilder('form', array('id' => $id))
-            ->add('id', 'hidden')
-            ->getForm()
-        ;
+        return $this->doDelete($request, $id);
     }
 }

@@ -101,7 +101,7 @@ class MetadataController extends CrudController
      */
     public function createAction(Request $request)
     {
-        return $this->doCreate();
+        return $this->doCreate($request);
     }
 
     /**
@@ -109,7 +109,7 @@ class MetadataController extends CrudController
      *
      * @Route("/new", name="admin_seo_metadata_new")
      * @Method("GET")
-     * @Template("BigfootSeoBundle:Metadata:edit.html.twig")
+     * @Template("BigfootSeoBundle:Metadata:form.html.twig")
      */
     public function newAction()
     {
@@ -132,7 +132,7 @@ class MetadataController extends CrudController
      *
      * @Route("/{id}/edit", name="admin_seo_metadata_edit")
      * @Method("GET")
-     * @Template("BigfootSeoBundle:Metadata:edit.html.twig")
+     * @Template("BigfootSeoBundle:Metadata:form.html.twig")
      */
     public function editAction($id)
     {
@@ -143,18 +143,15 @@ class MetadataController extends CrudController
         }
 
         $editForm   = $this->container->get('form.factory')->create('metadata', $entity);
-        $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'form'               => $editForm->createView(),
-            'form_method'        => 'PUT',
-            'form_action'        => $this->container->get('router')->generate('admin_seo_metadata_update', array('id' => $entity->getId())),
-            'form_submit'        => 'Edit',
-            'form_title'         => 'Metadata edit',
-            'form_cancel_route'  => 'admin_seo_metadata',
-            'delete_form'        => $deleteForm->createView(),
-            'delete_form_action' => $this->container->get('router')->generate('admin_seo_metadata_delete', array('id' => $entity->getId())),
-            'parameters_url'     => $this->container->get('router')->generate('admin_seo_list_parameters'),
+            'form'              => $editForm->createView(),
+            'form_method'       => 'PUT',
+            'form_action'       => $this->container->get('router')->generate('admin_seo_metadata_update', array('id' => $entity->getId())),
+            'form_submit'       => 'Edit',
+            'form_title'        => 'Metadata edit',
+            'form_cancel_route' => 'admin_seo_metadata',
+            'parameters_url'    => $this->container->get('router')->generate('admin_seo_list_parameters'),
         );
     }
 
@@ -163,7 +160,7 @@ class MetadataController extends CrudController
      *
      * @Route("/{id}", name="admin_seo_metadata_update")
      * @Method("PUT")
-     * @Template("BigfootSeoBundle:Metadata:edit.html.twig")
+     * @Template("BigfootSeoBundle:Metadata:form.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
@@ -175,7 +172,6 @@ class MetadataController extends CrudController
             throw new NotFoundHttpException('Unable to find Metadata entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->container->get('form.factory')->create('metadata', $entity);
         $editForm->submit($request);
 
@@ -193,47 +189,16 @@ class MetadataController extends CrudController
             'form_submit'       => 'Edit',
             'form_title'        => 'Metadata edit',
             'form_cancel_route' => 'admin_seo_metadata',
-            'delete_form'       => $deleteForm->createView(),
         );
     }
     /**
      * Deletes a Metadata entity.
      *
      * @Route("/{id}", name="admin_seo_metadata_delete")
-     * @Method("DELETE")
+     * @Method("GET|DELETE")
      */
     public function deleteAction(Request $request, $id)
     {
-        $form = $this->createDeleteForm($id);
-        $form->submit($request);
-
-        if ($form->isValid()) {
-            $em = $this->container->get('doctrine')->getManager();
-            $entity = $em->getRepository('BigfootSeoBundle:Metadata')->find($id);
-
-            if (!$entity) {
-                throw new NotFoundHttpException('Unable to find Metadata entity.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
-        }
-
-        return new RedirectResponse($this->container->get('router')->generate('admin_seo_metadata'));
-    }
-
-    /**
-     * Creates a form to delete a Metadata entity by id.
-     *
-     * @param mixed $id The entity id
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm($id)
-    {
-        return $this->container->get('form.factory')->createBuilder('form', array('id' => $id))
-            ->add('id', 'hidden')
-            ->getForm()
-        ;
+        return $this->doDelete($request, $id);
     }
 }

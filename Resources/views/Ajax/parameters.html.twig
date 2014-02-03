@@ -1,8 +1,9 @@
 {% if parameters is defined and parameters %}
     {{ 'Available parameters : ' | trans }}
+
     <ul>
-    {% for parameter in parameters %}
-        <li>:{{ parameter }}:</li>
-    {% endfor %}
+        {% for parameter in parameters %}
+            <li>:{{ parameter }}:</li>
+        {% endfor %}
     </ul>
 {% endif %}

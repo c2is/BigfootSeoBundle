@@ -1,11 +1,10 @@
-{% extends 'BigfootCoreBundle:Admin:form.html.twig' %}
+{% extends bigfoot_theme_bundle ~ ':Crud:form.html.twig' %}
 
 {% block form %}
     <div id="list_parameters" data-url="{{ parameters_url }}"></div>
     {{ form_row(form.route) }}
     {{ form_rest(form) }}
 {% endblock %}
-
 
 {% block javascripts %}
     {{ parent() }}

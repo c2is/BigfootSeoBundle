@@ -1,6 +1,6 @@
 {% extends bigfoot_theme_bundle ~ '::layout.html.twig' %}
 
-{% block content -%}
+{% block content %}
     <h1>Metadata</h1>
 
     <table class="record_properties">
@@ -28,23 +28,23 @@
         </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('admin_seo_metadata') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('admin_seo_metadata_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>
-        <form action="{{ path('admin_seo_metadata_delete', { 'id': entity.id }) }}" method="post">
-            <input type="hidden" name="_method" value="DELETE" />
-            {{ form_widget(delete_form) }}
-            <button type="submit">Delete</button>
-        </form>
-    </li>
-</ul>
+    <ul class="record_actions">
+        <li>
+            <a href="{{ path('admin_seo_metadata') }}">
+                Back to the list
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('admin_seo_metadata_edit', { 'id': entity.id }) }}">
+                Edit
+            </a>
+        </li>
+        <li>
+            <form action="{{ path('admin_seo_metadata_delete', { 'id': entity.id }) }}" method="post">
+                <input type="hidden" name="_method" value="DELETE" />
+                {{ form_widget(delete_form) }}
+                <button type="submit">Delete</button>
+            </form>
+        </li>
+    </ul>
 {% endblock %}

@@ -36,11 +36,11 @@ class MenuListener implements EventSubscriberInterface
             'metadata',
             array(
                 'label'  => 'Metadata',
-                'route'  => 'admin_metadata',
+                'route'  => 'admin_seo_metadata',
                 'extras' => array(
                     'routes' => array(
-                        'admin_metadata_new',
-                        'admin_metadata_edit'
+                        'admin_seo_metadata_new',
+                        'admin_seo_metadata_edit'
                     )
                 ),
                 'linkAttributes' => array(

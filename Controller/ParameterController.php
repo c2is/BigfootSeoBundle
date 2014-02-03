@@ -43,7 +43,7 @@ class ParameterController extends CrudController
      *
      * @Route("/", name="admin_seo_parameter")
      * @Method("GET")
-     * @Template("BigfootCoreBundle:crud:index.html.twig")
+     * @Template("BigfootCoreBundle:Crud:index.html.twig")
      */
     public function indexAction()
     {
@@ -54,7 +54,7 @@ class ParameterController extends CrudController
      *
      * @Route("/", name="admin_seo_parameter_create")
      * @Method("POST")
-     * @Template("BigfootCoreBundle:crud:new.html.twig")
+     * @Template("BigfootCoreBundle:Crud:form.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -67,7 +67,7 @@ class ParameterController extends CrudController
      *
      * @Route("/new", name="admin_seo_parameter_new")
      * @Method("GET")
-     * @Template("BigfootCoreBundle:crud:new.html.twig")
+     * @Template("BigfootCoreBundle:Crud:form.html.twig")
      */
     public function newAction()
     {
@@ -80,7 +80,7 @@ class ParameterController extends CrudController
      *
      * @Route("/{id}/edit", name="admin_seo_parameter_edit")
      * @Method("GET")
-     * @Template("BigfootCoreBundle:crud:edit.html.twig")
+     * @Template("BigfootCoreBundle:Crud:form.html.twig")
      */
     public function editAction($id)
     {
@@ -93,7 +93,7 @@ class ParameterController extends CrudController
      *
      * @Route("/{id}", name="admin_seo_parameter_update")
      * @Method("PUT")
-     * @Template("BigfootCoreBundle:crud:edit.html.twig")
+     * @Template("BigfootCoreBundle:Crud:form.html.twig")
      */
     public function updateAction(Request $request, $id)
     {

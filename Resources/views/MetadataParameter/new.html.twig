@@ -1,6 +1,11 @@
-{% extends bigfoot_theme_bundle~'::base.form.html.twig' %}
+{% extends 'BigfootCoreBundle:Admin:form.html.twig' %}
+
+{% block form %}
+    {{ form_rest(form) }}
+{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+
     <script src="{{ asset('bundles/bigfootseo/js/seo_scripts.js') }}"></script>
 {% endblock %}

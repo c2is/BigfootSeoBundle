@@ -41,11 +41,10 @@ class MetadataParameter
         $this->parameters = new ArrayCollection();
     }
 
-
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -61,14 +60,14 @@ class MetadataParameter
     public function setRoute($route)
     {
         $this->route = $route;
-    
+
         return $this;
     }
 
     /**
      * Get route
      *
-     * @return string 
+     * @return string
      */
     public function getRoute()
     {
@@ -83,10 +82,20 @@ class MetadataParameter
     /**
      * Get parameters
      *
-     * @return string 
+     * @return string
      */
     public function getParameters()
     {
         return $this->parameters;
+    }
+
+    /**
+     * Get parameters
+     *
+     * @return string
+     */
+    public function getFirstParameter()
+    {
+        return $this->parameters[0]->getName();
     }
 }

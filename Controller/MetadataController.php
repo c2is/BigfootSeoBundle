@@ -30,7 +30,7 @@ class MetadataController extends CrudController
      */
     protected function getName()
     {
-        return 'admin_metadata';
+        return 'admin_seo_metadata';
     }
 
     /**
@@ -43,7 +43,13 @@ class MetadataController extends CrudController
 
     protected function getFields()
     {
-        return array('id' => 'ID', 'route' => 'Route', 'title'=> 'Title', 'description' => 'Description', 'keywords' => 'Keywords');
+        return array(
+            'id'          => 'ID',
+            'route'       => 'Route',
+            'title'       => 'Title',
+            'description' => 'Description',
+            'keywords'    => 'Keywords'
+        );
     }
 
     protected function getEntityLabelPlural()
@@ -79,9 +85,8 @@ class MetadataController extends CrudController
     /**
      * Lists all Metadata entities.
      *
-     * @Route("/", name="admin_metadata")
+     * @Route("/", name="admin_seo_metadata")
      * @Method("GET")
-     * @Template()
      */
     public function indexAction()
     {
@@ -93,32 +98,16 @@ class MetadataController extends CrudController
      *
      * @Route("/", name="admin_seo_metadata_create")
      * @Method("POST")
-     * @Template("BigfootSeoBundle:Metadata:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity  = new Metadata();
-        $form = $this->container->get('form.factory')->create('metadata', $entity);
-        $form->submit($request);
-
-        if ($form->isValid()) {
-            $em = $this->container->get('doctrine')->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-            return new RedirectResponse($this->container->get('router')->generate('admin_metadata'));
-        }
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
+        return $this->doCreate();
     }
 
     /**
      * Displays a form to create a new Metadata entity.
      *
-     * @Route("/new", name="admin_metadata_new")
+     * @Route("/new", name="admin_seo_metadata_new")
      * @Method("GET")
      * @Template("BigfootSeoBundle:Metadata:edit.html.twig")
      */
@@ -133,7 +122,7 @@ class MetadataController extends CrudController
             'form_action'       => $this->container->get('router')->generate('admin_seo_metadata_create'),
             'form_submit'       => 'Submit',
             'form_title'        => 'Metadata creation',
-            'form_cancel_route' => 'admin_metadata',
+            'form_cancel_route' => 'admin_seo_metadata',
             'parameters_url'    => $this->container->get('router')->generate('admin_seo_list_parameters'),
         );
     }
@@ -141,33 +130,31 @@ class MetadataController extends CrudController
     /**
      * Displays a form to edit an existing Metadata entity.
      *
-     * @Route("/{id}/edit", name="admin_metadata_edit")
+     * @Route("/{id}/edit", name="admin_seo_metadata_edit")
      * @Method("GET")
-     * @Template()
+     * @Template("BigfootSeoBundle:Metadata:edit.html.twig")
      */
     public function editAction($id)
     {
-        $em = $this->container->get('doctrine')->getManager();
-
-        $entity = $em->getRepository('BigfootSeoBundle:Metadata')->find($id);
+        $entity = $this->getRepository('BigfootSeoBundle:Metadata')->find($id);
 
         if (!$entity) {
             throw new NotFoundHttpException('Unable to find Metadata entity.');
         }
 
-        $editForm = $this->container->get('form.factory')->create('metadata', $entity);
+        $editForm   = $this->container->get('form.factory')->create('metadata', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'form'                  => $editForm->createView(),
-            'form_method'           => 'PUT',
-            'form_action'           => $this->container->get('router')->generate('admin_seo_metadata_update', array('id' => $entity->getId())),
-            'form_submit'           => 'Edit',
-            'form_title'            => 'Metadata edit',
-            'form_cancel_route'     => 'admin_metadata',
-            'delete_form'           => $deleteForm->createView(),
-            'delete_form_action'    =>  $this->container->get('router')->generate('admin_seo_metadata_delete', array('id' => $entity->getId())),
-            'parameters_url'        => $this->container->get('router')->generate('admin_seo_list_parameters'),
+            'form'               => $editForm->createView(),
+            'form_method'        => 'PUT',
+            'form_action'        => $this->container->get('router')->generate('admin_seo_metadata_update', array('id' => $entity->getId())),
+            'form_submit'        => 'Edit',
+            'form_title'         => 'Metadata edit',
+            'form_cancel_route'  => 'admin_seo_metadata',
+            'delete_form'        => $deleteForm->createView(),
+            'delete_form_action' => $this->container->get('router')->generate('admin_seo_metadata_delete', array('id' => $entity->getId())),
+            'parameters_url'     => $this->container->get('router')->generate('admin_seo_list_parameters'),
         );
     }
 
@@ -196,7 +183,7 @@ class MetadataController extends CrudController
             $em->persist($entity);
             $em->flush();
 
-            return new RedirectResponse($this->container->get('router')->generate('admin_metadata'));
+            return new RedirectResponse($this->container->get('router')->generate('admin_seo_metadata'));
         }
 
         return array(
@@ -205,7 +192,7 @@ class MetadataController extends CrudController
             'form_action'       => $this->container->get('router')->generate('admin_seo_metadata_update', array('id' => $entity->getId())),
             'form_submit'       => 'Edit',
             'form_title'        => 'Metadata edit',
-            'form_cancel_route' => 'admin_metadata',
+            'form_cancel_route' => 'admin_seo_metadata',
             'delete_form'       => $deleteForm->createView(),
         );
     }
@@ -232,7 +219,7 @@ class MetadataController extends CrudController
             $em->flush();
         }
 
-        return new RedirectResponse($this->container->get('router')->generate('admin_metadata'));
+        return new RedirectResponse($this->container->get('router')->generate('admin_seo_metadata'));
     }
 
     /**

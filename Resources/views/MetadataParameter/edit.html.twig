@@ -1,16 +1,11 @@
-{% extends bigfoot_theme_bundle~'::base.html.twig' %}
+{% extends 'BigfootCoreBundle:Admin:form.html.twig' %}
 
-{% block content %}
-    {% include 'BigfootCoreBundle:crud:form.html.twig' with {
-    'action_route': path('admin_parameter_metadataparameter_update', { 'id': entity.id }),
-    'action_name': 'Edit',
-    'form_title': 'MetadataParameter edit',
-    'cancel_route': 'admin_parameter_metadataparameter',
-    'form': edit_form,
-    'method': 'PUT'
-    } %}
+{% block form %}
+    {{ form_rest(form) }}
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
+
     <script src="{{ asset('bundles/bigfootseo/js/seo_scripts.js') }}"></script>
 {% endblock %}

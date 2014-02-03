@@ -12,7 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 
-use Bigfoot\Bundle\CoreBundle\Controller\BaseController;
+use Bigfoot\Bundle\CoreBundle\Controller\CrudController;
 use Bigfoot\Bundle\CoreBundle\Theme\Menu\Item;
 use Bigfoot\Bundle\SeoBundle\Entity\MetadataParameter;
 use Bigfoot\Bundle\SeoBundle\Entity\Parameter;
@@ -24,37 +24,48 @@ use Bigfoot\Bundle\SeoBundle\Form\MetadataParameterType;
  * @Cache(maxage="0", smaxage="0", public="false")
  * @Route("/admin/parameter/metadataparameter")
  */
-class MetadataParameterController extends BaseController
+class MetadataParameterController extends CrudController
 {
+    /**
+     * @return string
+     */
+    protected function getName()
+    {
+        return 'admin_parameter_metadataparameter';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getEntity()
+    {
+        return 'BigfootSeoBundle:MetadataParameter';
+    }
+
+    protected function getFields()
+    {
+        return array(
+            'id'                => 'ID',
+            'route'             => 'Route',
+            'getFirstParameter' => 'Parameters',
+        );
+    }
+
+    protected function getEntityLabelPlural()
+    {
+        return 'Metadata parameters';
+    }
+
     /**
      * Lists all MetadataParameter entities.
      *
      * @Route("/", name="admin_parameter_metadataparameter")
      * @Method("GET")
-     * @Template()
+     * @Template("BigfootCoreBundle:Crud:index.html.twig")
      */
     public function indexAction()
     {
-        $em = $this->container->get('doctrine')->getManager();
-
-        $entities = $em->getRepository('BigfootSeoBundle:MetadataParameter')->findAll();
-
-        $theme = $this->container->get('bigfoot.theme');
-        $theme['page_content']['globalActions']->addItem(new Item('crud_add', 'Add a metadata parameter', 'admin_parameter_metadataparameter_new'));
-  /*
-        Id' | trans }}</th>
-                <th>{{ 'Route' | trans }}</th>
-                <th>{{ 'Parameters
-*/
-        return array(
-            'list_title'    => 'MetadataParameter list',
-            'list_items'    => $entities,
-            'list_fields'   => array(
-                'id' => 'ID',
-                'route' => 'Route',
-                'parameters' => 'Parameters',
-            ),
-        );
+        return $this->doIndex();
     }
 
     /**
@@ -148,12 +159,12 @@ class MetadataParameterController extends BaseController
         // base de données
         foreach ($entity->getParameters() as $parameter) $originalParameters[] = $parameter;
 
-        $editForm = $this->container->get('form.factory')->create('metadataparameter', $entity);
+        $form = $this->container->get('form.factory')->create('metadataparameter', $entity);
 
         if ($request->isMethod('POST')) {
-            $editForm->submit($this->getRequest());
+            $form->submit($this->getRequest());
 
-            if ($editForm->isValid()) {
+            if ($form->isValid()) {
 
                 // filtre $originalTags pour ne contenir que les tags
                 // n'étant plus présents
@@ -189,13 +200,27 @@ class MetadataParameterController extends BaseController
             }
         }
 
-        $editForm = $this->container->get('form.factory')->create('metadataparameter', $entity);
-        $deleteForm = $this->createDeleteForm($id);
+        $form = $this->container->get('form.factory')->create('metadataparameter', $entity);
 
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'entity'       => $entity,
+            'form'         => $form->createView(),
+            'form_method'  => $request->getMethod(),
+            'form_title'   => sprintf('%s creation', $this->getEntityLabel()),
+            'form_action'  => $this->generateUrl($this->getRouteNameForAction('create')),
+            'form_submit'  => 'Create',
+            'cancel_route' => $this->getRouteNameForAction('index'),
+            'isAjax'       => $request->isXmlHttpRequest(),
+            'breadcrumbs'  => array(
+                array(
+                    'url'   => $this->generateUrl($this->getRouteNameForAction('index')),
+                    'label' => $this->getEntityLabelPlural()
+                ),
+                array(
+                    'url'   => $this->generateUrl($this->getRouteNameForAction('new')),
+                    'label' => sprintf('%s creation', $this->getEntityLabel())
+                ),
+            ),
         );
     }
 

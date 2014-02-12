@@ -72,7 +72,7 @@ class SeoHelper
 
         $this->entityManager = $container->get('doctrine')->getManager();
 
-        $this->routeManager = $container->get('bigfoot.route_manager');
+        $this->routeManager = $container->get('bigfoot_core.manager.route');
     }
 
     public function getMetadata($fieldname = null, $route = null)

@@ -22,7 +22,7 @@ use Bigfoot\Bundle\SeoBundle\Form\MetadataParameterType;
  * MetadataParameter controller.
  *
  * @Cache(maxage="0", smaxage="0", public="false")
- * @Route("/admin/parameter/metadataparameter")
+ * @Route("/parameter/metadataparameter")
  */
 class MetadataParameterController extends CrudController
 {

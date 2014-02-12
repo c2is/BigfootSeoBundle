@@ -14,7 +14,7 @@ use Bigfoot\Bundle\CoreBundle\Controller\CrudController;
  * Parameter controller.
  *
  * @Cache(maxage="0", smaxage="0", public="false")
- * @Route("/admin/seo/parameter")
+ * @Route("/seo/parameter")
  */
 class ParameterController extends CrudController
 {
@@ -48,62 +48,34 @@ class ParameterController extends CrudController
     {
         return $this->doIndex();
     }
-    /**
-     * Creates a new Parameter entity.
-     *
-     * @Route("/", name="admin_seo_parameter_create")
-     * @Method("POST")
-     */
-    public function createAction(Request $request)
-    {
-
-        return $this->doCreate($request);
-    }
 
     /**
      * Displays a form to create a new Parameter entity.
      *
      * @Route("/new", name="admin_seo_parameter_new")
-     * @Method("GET")
      */
-    public function newAction()
+    public function newAction(Request $request)
     {
-
-        return $this->doNew();
+        return $this->doNew($request);
     }
 
     /**
      * Displays a form to edit an existing Parameter entity.
      *
-     * @Route("/{id}/edit", name="admin_seo_parameter_edit")
-     * @Method("GET")
+     * @Route("/edit/{id}", name="admin_seo_parameter_edit")
      */
-    public function editAction($id)
+    public function editAction(Request $request, $id)
     {
-
-        return $this->doEdit($id);
+        return $this->doEdit($request, $id);
     }
 
-    /**
-     * Edits an existing Parameter entity.
-     *
-     * @Route("/{id}", name="admin_seo_parameter_update")
-     * @Method("GET|POST|PUT")
-     */
-    public function updateAction(Request $request, $id)
-    {
-
-        return $this->doUpdate($request, $id);
-    }
     /**
      * Deletes a Parameter entity.
      *
-     * @Route("/{id}/delete", name="admin_seo_parameter_delete")
-     * @Method("GET|DELETE")
+     * @Route("/delete/{id}", name="admin_seo_parameter_delete")
      */
     public function deleteAction(Request $request, $id)
     {
-
-    return $this->doDelete($request, $id);
-}
+        return $this->doDelete($request, $id);
+    }
 }

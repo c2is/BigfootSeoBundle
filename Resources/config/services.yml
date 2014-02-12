@@ -13,9 +13,10 @@ services:
             arguments: [@service_container]
             tags:
                 - { name: form.type, alias: metadataparameter }
-    bigfoot_seo.helper:
-        class: Bigfoot\Bundle\SeoBundle\Helper\SeoHelper
-        arguments: [ @service_container ]
+
+    # bigfoot_seo.helper:
+    #     class: Bigfoot\Bundle\SeoBundle\Helper\SeoHelper
+    #     arguments: [ @service_container ]
 
     # Menu Listener
     bigfoot_seo.listener.menu:

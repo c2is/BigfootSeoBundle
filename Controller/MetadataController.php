@@ -21,7 +21,7 @@ use Bigfoot\Bundle\SeoBundle\Form\MetadataType;
  * Metadata controller.
  *
  * @Cache(maxage="0", smaxage="0", public="false")
- * @Route("/seo/metadata")
+ * @Route("/admin/seo/metadata")
  */
 class MetadataController extends CrudController
 {

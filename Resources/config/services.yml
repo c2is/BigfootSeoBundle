@@ -21,5 +21,6 @@ services:
     # Menu Listener
     bigfoot_seo.listener.menu:
         class: Bigfoot\Bundle\SeoBundle\Listener\MenuListener
+        arguments: [@security.context]
         tags:
             - { name: kernel.event_subscriber }

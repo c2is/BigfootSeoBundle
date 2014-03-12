@@ -35,6 +35,13 @@ class Parameter
      */
     private $description;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="method", type="string", length=255)
+     */
+    private $method;
+
     private $metadataParameters;
 
     /**
@@ -100,4 +107,19 @@ class Parameter
         }
     }
 
+    /**
+     * @param string $method
+     */
+    public function setMethod($method)
+    {
+        $this->method = $method;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMethod()
+    {
+        return $this->method;
+    }
 }

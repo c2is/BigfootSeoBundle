@@ -20,18 +20,6 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('bigfoot_seo');
 
-        $rootNode
-            ->children()
-                ->arrayNode('default')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('meta_title')->defaultValue('')->end()
-                        ->scalarNode('meta_description')->defaultValue('')->end()
-                        ->scalarNode('meta_keywords')->defaultValue('')->end()
-                    ->end()
-                ->end()
-            ->end();
-
         return $treeBuilder;
     }
 }

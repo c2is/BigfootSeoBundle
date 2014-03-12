@@ -13,19 +13,16 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  */
 class MetadataType extends AbstractType
 {
-    /**
-     * @var \Symfony\Component\DependencyInjection\Container
-     */
-    protected $container;
+    protected $bigfootSeoManagerRoute;
 
     /**
      * Constructor
      *
      * @param $container
      */
-    public function __construct(Container $container)
+    public function __construct($bigfootSeoManagerRoute)
     {
-        $this->container = $container;
+        $this->bigfootSeoManagerRoute = $bigfootSeoManagerRoute;
     }
 
     /**
@@ -36,7 +33,7 @@ class MetadataType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $routes = $this->container->get('bigfoot_core.manager.route')->getArrayRoutes();
+        $routes = $this->bigfootSeoManagerRoute->getArrayRouteCollection();
 
         $builder
             ->add('route','choice',array(

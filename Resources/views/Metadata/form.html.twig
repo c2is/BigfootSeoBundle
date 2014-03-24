@@ -1,7 +1,7 @@
 {% extends bigfoot_theme_bundle ~ ':crud:form.html.twig' %}
 
 {% block form %}
-    <div id="list_parameters" data-url="{{ parameters_url }}"></div>
+    <div id="list_parameters" data-url="{{ url('admin_seo_list_parameters') }}"></div>
     {{ form_row(form.route) }}
     {{ form_rest(form) }}
 {% endblock %}

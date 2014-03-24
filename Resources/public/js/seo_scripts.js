@@ -20,7 +20,6 @@ jQuery(document).ready(function() {
     $selectRoute = $('select.seo-metadata-route-choice');
     displayAvailableParameters($selectRoute.val());
 
-
     // OnChange Event on the route_id select (new Metadata)
     $selectRoute.change(function() {
         displayAvailableParameters($(this).val());

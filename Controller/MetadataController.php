@@ -21,7 +21,7 @@ use Bigfoot\Bundle\SeoBundle\Form\MetadataType;
  * Metadata controller.
  *
  * @Cache(maxage="0", smaxage="0", public="false")
- * @Route("/admin/seo/metadata")
+ * @Route("/seo/metadata")
  */
 class MetadataController extends CrudController
 {
@@ -52,6 +52,11 @@ class MetadataController extends CrudController
         );
     }
 
+    protected function getFormType()
+    {
+        return 'metadata';
+    }
+
     protected function getEntityLabelPlural()
     {
         return 'Metadata';
@@ -66,20 +71,17 @@ class MetadataController extends CrudController
      */
     public function listParametersAction(Request $request, $route)
     {
-        $parameters = array();
-
         $em = $this->container->get('doctrine')->getManager();
 
-        $metadataParameter = $em->getRepository('BigfootSeoBundle:MetadataParameter')->findOneBy(array('route' => $route));
-        if ($metadataParameter) {
-            $tabParameters = $metadataParameter->getParameters();
+        $metadataParameter = $em->getRepository('BigfootSeoBundle:MetadataParameter')->findOneByRoute($route);
 
-            foreach ($tabParameters as $parameter) {
-                $parameters[] = $parameter->getName();
-            }
+        if ($metadataParameter) {
+            return array(
+                'metadataParameter' => $metadataParameter
+            );
         }
 
-        return array('parameters' => $parameters);
+       return array();
     }
 
     /**
@@ -108,18 +110,38 @@ class MetadataController extends CrudController
      * Displays a form to create a new Metadata entity.
      *
      * @Route("/new", name="admin_seo_metadata_new")
-     * @Method("GET")
      * @Template("BigfootSeoBundle:Metadata:form.html.twig")
      */
-    public function newAction()
+    public function newAction(Request $request)
     {
+
         $entity = new Metadata();
         $form   = $this->container->get('form.factory')->create('metadata', $entity);
+
+        if ('POST' === $request->getMethod()) {
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $this->prePersist($entity, 'new');
+
+                $this->persistAndFlush($entity);
+
+                if (!$request->isXmlHttpRequest()) {
+                    $action = $this->generateUrl($this->getRouteNameForAction('edit'), array('id' => $entity->getId()));
+
+                    $this->addSuccessFlash('The %entity% has been created.');
+
+                    return $this->redirect($action);
+                } else {
+                    return $this->handleSuccessResponse('new', $entity);
+                }
+            }
+        }
 
         return array(
             'form'              => $form->createView(),
             'form_method'       => 'POST',
-            'form_action'       => $this->container->get('router')->generate('admin_seo_metadata_create'),
+            'form_action'       => $this->container->get('router')->generate('admin_seo_metadata_new'),
             'form_submit'       => 'Submit',
             'form_title'        => 'Metadata creation',
             'form_cancel_route' => 'admin_seo_metadata',
@@ -130,8 +152,7 @@ class MetadataController extends CrudController
     /**
      * Displays a form to edit an existing Metadata entity.
      *
-     * @Route("/{id}/edit", name="admin_seo_metadata_edit")
-     * @Method("GET")
+     * @Route("/edit/{id}", name="admin_seo_metadata_edit")
      * @Template("BigfootSeoBundle:Metadata:form.html.twig")
      */
     public function editAction($id)
@@ -158,8 +179,7 @@ class MetadataController extends CrudController
     /**
      * Edits an existing Metadata entity.
      *
-     * @Route("/{id}", name="admin_seo_metadata_update")
-     * @Method("PUT")
+     * @Route("/update/{id}", name="admin_seo_metadata_update")
      * @Template("BigfootSeoBundle:Metadata:form.html.twig")
      */
     public function updateAction(Request $request, $id)
@@ -194,7 +214,7 @@ class MetadataController extends CrudController
     /**
      * Deletes a Metadata entity.
      *
-     * @Route("/{id}", name="admin_seo_metadata_delete")
+     * @Route("/delete/{id}", name="admin_seo_metadata_delete")
      * @Method("GET|DELETE")
      */
     public function deleteAction(Request $request, $id)

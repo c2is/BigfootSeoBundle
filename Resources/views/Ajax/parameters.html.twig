@@ -1,9 +1,10 @@
-{% if parameters is defined and parameters %}
-    {{ 'Available parameters : ' | trans }}
-
-    <ul>
-        {% for parameter in parameters %}
-            <li>:{{ parameter }}:</li>
+{% if metadataParameter is defined %}
+<div class="form-group">
+    <label class="control-label col-sm-3">{{ 'Paramètre(s) disponible(s) : ' | trans }}</label>
+    <div class="input-group col-xs-10 col-sm-5" style="padding-top:6px;">
+        {% for parameter in metadataParameter.getParameters() %}
+            - <strong>{{ parameter.getName() }}</strong> ({{ parameter.getDescription() }})<br />
         {% endfor %}
-    </ul>
+    </div>
+</div>
 {% endif %}

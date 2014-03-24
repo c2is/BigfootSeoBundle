@@ -23,6 +23,7 @@ class ParameterType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
+            ->add('method')
         ;
     }
 

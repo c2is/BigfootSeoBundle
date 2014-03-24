@@ -5,12 +5,12 @@ parameters:
 services:
     form.type.metadata:
         class: '%bigfoot_seo.metadatatype.class%'
-        arguments: [@service_container]
+        arguments: [@bigfoot_seo.manager.route]
         tags:
             - { name: form.type, alias: metadata }
     form.type.metadataparameter:
             class: '%bigfoot_seo.metadataparametertype.class%'
-            arguments: [@service_container]
+            arguments: [@bigfoot_seo.manager.route]
             tags:
                 - { name: form.type, alias: metadataparameter }
 
@@ -25,3 +25,18 @@ services:
             - @security.context
         tags:
             - { name: kernel.event_subscriber }
+
+     # Content Extension
+    bigfoot_seo.twig.extension.seo:
+        class: Bigfoot\Bundle\SeoBundle\Twig\Extension\SeoExtension
+        arguments:
+            - @doctrine.orm.entity_manager
+        tags:
+            - { name: twig.extension }
+
+     # Manager
+    bigfoot_seo.manager.route:
+        class: Bigfoot\Bundle\SeoBundle\Manager\RouteManager
+        arguments:
+            - @router
+            - %bigfoot_seo%

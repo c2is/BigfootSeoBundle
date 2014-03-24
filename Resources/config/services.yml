@@ -18,9 +18,10 @@ services:
         class: Bigfoot\Bundle\SeoBundle\Helper\SeoHelper
         arguments: [ @service_container ]
 
-    # Menu Listener
-    bigfoot_seo.listener.menu:
-        class: Bigfoot\Bundle\SeoBundle\Listener\MenuListener
-        arguments: [@security.context]
+    # Menu Subscriber
+    bigfoot_seo.subscriber.menu:
+        class: Bigfoot\Bundle\SeoBundle\Subscriber\MenuSubscriber
+        arguments:
+            - @security.context
         tags:
             - { name: kernel.event_subscriber }

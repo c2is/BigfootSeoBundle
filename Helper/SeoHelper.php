@@ -72,7 +72,7 @@ class SeoHelper
 
         $this->entityManager = $container->get('doctrine')->getManager();
 
-        $this->routeManager = $container->get('bigfoot_core.manager.route');
+        $this->routeManager = $container->get('bigfoot_seo.manager.route');
     }
 
     public function getMetadata($fieldname = null, $route = null)
@@ -87,7 +87,7 @@ class SeoHelper
             $route = $this->request->get('_route');
         }
 
-        $routes = $this->routeManager->getRoutes();
+        $routes = $this->routeManager->getArrayRouteCollection()->toArray();
 
         if (array_key_exists($route, $routes)) {
             $repository = $this->entityManager->getRepository('BigfootSeoBundle:Metadata');

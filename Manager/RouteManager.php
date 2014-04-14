@@ -4,6 +4,7 @@ namespace Bigfoot\Bundle\SeoBundle\Manager;
 
 use Symfony\Bundle\FrameworkBundle\Routing\DelegatingLoader;
 use AppKernel;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Uses the Symfony2 route loader to store a specific set of routes.
@@ -17,15 +18,17 @@ use AppKernel;
  */
 class RouteManager
 {
-
+    /** @var \Symfony\Component\Routing\RouterInterface */
     protected $router;
+
+    /** @var array */
     protected $bigfootSeo;
 
     /**
      * Construct RouteManager
      *
      */
-    public function __construct($router, $bigfootSeo)
+    public function __construct(RouterInterface $router, array $bigfootSeo)
     {
         $this->router      = $router;
         $this->bigfootSeo  = $bigfootSeo;

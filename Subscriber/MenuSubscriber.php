@@ -46,7 +46,7 @@ class MenuSubscriber implements EventSubscriberInterface
         $menu = $event->getSubject();
         $root = $menu->getRoot();
 
-        if ($this->security->isGranted('ROLE_ADMIN')) {
+        if ($this->security->isGranted('ROLE_ADMIN') or $this->security->isGranted('ROLE_SEO')) {
             $seoMenu = $root->addChild(
                 'seo',
                 array(
@@ -81,7 +81,9 @@ class MenuSubscriber implements EventSubscriberInterface
                     )
                 )
             );
+        }
 
+        if ($this->security->isGranted('ROLE_ADMIN')) {
             $seoMenu->addChild(
                 'metadata_parameter',
                 array(

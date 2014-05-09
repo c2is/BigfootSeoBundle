@@ -116,7 +116,7 @@ class MetadataController extends CrudController
     {
 
         $entity = new Metadata();
-        $form   = $this->container->get('form.factory')->create('metadata', $entity);
+        $form   = $this->createForm('metadata', $entity);
 
         if ('POST' === $request->getMethod()) {
             $form->handleRequest($request);
@@ -163,7 +163,7 @@ class MetadataController extends CrudController
             throw new NotFoundHttpException('Unable to find Metadata entity.');
         }
 
-        $editForm   = $this->container->get('form.factory')->create('metadata', $entity);
+        $editForm   = $this->createForm('metadata', $entity);
 
         return array(
             'form'              => $editForm->createView(),
@@ -192,7 +192,7 @@ class MetadataController extends CrudController
             throw new NotFoundHttpException('Unable to find Metadata entity.');
         }
 
-        $editForm = $this->container->get('form.factory')->create('metadata', $entity);
+        $editForm   = $this->createForm('metadata', $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {

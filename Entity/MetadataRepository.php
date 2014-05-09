@@ -3,6 +3,7 @@
 namespace Bigfoot\Bundle\SeoBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * MetadataRepository
@@ -12,4 +13,25 @@ use Doctrine\ORM\EntityRepository;
  */
 class MetadataRepository extends EntityRepository
 {
+    /**
+     * @param string $route
+     * @param QueryBuilder $queryBuilder
+     * @return Metadata|null
+     */
+    public function findOneByRoute($route, $queryBuilder = null)
+    {
+        if ($queryBuilder and $queryBuilder instanceof QueryBuilder) {
+            $queryBuilder = clone $queryBuilder;
+        } else {
+            $queryBuilder = $this->createQueryBuilder('e');
+        }
+
+        $results = $queryBuilder
+            ->andWhere('e.route = :route')
+            ->setParameter(':route', $route)
+            ->getQuery()
+            ->getResult()
+        ;
+        return $results ? $results[0] : null;
+    }
 }

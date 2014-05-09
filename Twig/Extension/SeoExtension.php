@@ -2,27 +2,38 @@
 
 namespace Bigfoot\Bundle\SeoBundle\Twig\Extension;
 
+use Bigfoot\Bundle\ContextBundle\Entity\ContextRepository;
+use Bigfoot\Bundle\ContextBundle\Service\ContextService;
+use Bigfoot\Bundle\SeoBundle\Entity\MetadataRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Doctrine\ORM\EntityManager;
 use Twig_Extension;
 use Twig_Function_Method;
 use Twig_Environment;
 use BeSimple\I18nRoutingBundle\Routing\Router;
-use mageekguy\atoum\tests\units\mock\php\method;
 
 /**
  * SeoExtension
  */
 class SeoExtension extends Twig_Extension
 {
+    /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;
+
+    /** @var \Bigfoot\Bundle\ContextBundle\Service\ContextService */
+    private $context;
+
+    /** @var \Bigfoot\Bundle\ContextBundle\Entity\ContextRepository */
+    private $contextRepo;
 
     /**
      * Construct ContentExtension
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, ContextService $context, ContextRepository $contextRepo)
     {
         $this->entityManager = $entityManager;
+        $this->context       = $context;
+        $this->contextRepo   = $contextRepo;
     }
 
     /**
@@ -40,11 +51,7 @@ class SeoExtension extends Twig_Extension
     public function seoTitle($route, $defaultKey, $entity = null)
     {
         $em = $this->entityManager;
-        $metadata = $em->getRepository('BigfootSeoBundle:Metadata')->findOneBy(array('route' => $route));
-
-        if (!$metadata) {
-            $metadata = $em->getRepository('BigfootSeoBundle:Metadata')->findOneBy(array('route' => $defaultKey));
-        }
+        $metadata = $this->getMetadata($route, $defaultKey);
 
         if ($metadata) {
             $title = $metadata->getTitle();
@@ -67,7 +74,7 @@ class SeoExtension extends Twig_Extension
     public function seoDescription($route, $defaultKey, $entity = null)
     {
         $em = $this->entityManager;
-        $metadata = $em->getRepository('BigfootSeoBundle:Metadata')->findOneBy(array('route' => $route));
+        $metadata = $this->getMetadata($route, $defaultKey);
 
         if (!$metadata) {
             $metadata = $em->getRepository('BigfootSeoBundle:Metadata')->findOneBy(array('route' => $defaultKey));
@@ -94,7 +101,7 @@ class SeoExtension extends Twig_Extension
     public function seoKeywords($route, $defaultKey, $entity = null)
     {
         $em = $this->entityManager;
-        $metadata = $em->getRepository('BigfootSeoBundle:Metadata')->findOneBy(array('route' => $route));
+        $metadata = $this->getMetadata($route, $defaultKey);
 
         if (!$metadata) {
             $metadata = $em->getRepository('BigfootSeoBundle:Metadata')->findOneBy(array('route' => $defaultKey));
@@ -116,6 +123,22 @@ class SeoExtension extends Twig_Extension
         }
 
         return false;
+    }
+
+    public function getMetadata($route, $defaultKey)
+    {
+        $em = $this->entityManager;
+        $contextRepo = $this->contextRepo;
+        $contextualizedQuery = $contextRepo->createContextQueryBuilder('Bigfoot\\Bundle\\SeoBundle\\Entity\\Metadata');
+        /** @var MetadataRepository $metadataRepo */
+        $metadataRepo = $em->getRepository('BigfootSeoBundle:Metadata');
+        $metadata = $metadataRepo->findOneByRoute($route, $contextualizedQuery);
+
+        if (!$metadata) {
+            $metadata = $metadataRepo->findOneByRoute($defaultKey, $contextualizedQuery);
+        }
+
+        return $metadata;
     }
 
     /**

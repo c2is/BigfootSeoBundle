@@ -31,6 +31,8 @@ services:
         class: Bigfoot\Bundle\SeoBundle\Twig\Extension\SeoExtension
         arguments:
             - @doctrine.orm.entity_manager
+            - @bigfoot_context
+            - @bigfoot_context.repository.context
         tags:
             - { name: twig.extension }
 

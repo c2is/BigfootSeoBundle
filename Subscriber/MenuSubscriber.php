@@ -43,11 +43,10 @@ class MenuSubscriber implements EventSubscriberInterface
      */
     public function onGenerateMain(GenericEvent $event)
     {
-        $menu = $event->getSubject();
-        $root = $menu->getRoot();
+        $builder = $event->getSubject();
 
-        if ($this->security->isGranted('ROLE_ADMIN') or $this->security->isGranted('ROLE_SEO')) {
-            $seoMenu = $root->addChild(
+        $builder
+            ->addChild(
                 'seo',
                 array(
                     'label'          => 'Seo',
@@ -56,17 +55,16 @@ class MenuSubscriber implements EventSubscriberInterface
                         'class' => 'dropdown-toggle',
                         'icon'  => 'rocket',
                     )
-                )
-            );
-
-            $seoMenu->setChildrenAttributes(
+                ),
                 array(
-                    'class' => 'submenu',
+                    'children-attributes' => array(
+                        'class' => 'submenu'
+                    )
                 )
-            );
-
-            $seoMenu->addChild(
-                'metadata',
+            )
+            ->addChildFor(
+                'seo',
+                'seo_metadata',
                 array(
                     'label'  => 'Metadata',
                     'route'  => 'admin_seo_metadata',
@@ -80,12 +78,10 @@ class MenuSubscriber implements EventSubscriberInterface
                         'icon' => 'rocket',
                     )
                 )
-            );
-        }
-
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-            $seoMenu->addChild(
-                'metadata_parameter',
+            )
+            ->addChildFor(
+                'seo',
+                'seo_metadata_parameter',
                 array(
                     'label'  => 'Metadata Parameter',
                     'route'  => 'admin_parameter_metadataparameter',
@@ -100,6 +96,5 @@ class MenuSubscriber implements EventSubscriberInterface
                     )
                 )
             );
-        }
     }
 }

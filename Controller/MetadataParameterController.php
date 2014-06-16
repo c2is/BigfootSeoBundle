@@ -45,9 +45,15 @@ class MetadataParameterController extends CrudController
     protected function getFields()
     {
         return array(
-            'id'                => 'ID',
-            'route'             => 'Route',
-            'getFirstParameter' => 'Parameters',
+            'id'       => array(
+                'label' => 'ID',
+            ),
+            'route'     => array(
+                'label' => 'Route',
+            ),
+            'getFirstParameter'     => array(
+                'label' => 'Parameters',
+            ),
         );
     }
 

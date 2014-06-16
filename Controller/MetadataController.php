@@ -44,11 +44,21 @@ class MetadataController extends CrudController
     protected function getFields()
     {
         return array(
-            'id'          => 'ID',
-            'route'       => 'Route',
-            'title'       => 'Title',
-            'description' => 'Description',
-            'keywords'    => 'Keywords'
+            'id'         => array(
+                'label' => 'ID',
+            ),
+            'route'       => array(
+                'label' => 'Route',
+            ),
+            'title'       => array(
+                'label' => 'Title',
+            ),
+            'description' => array(
+                'label' => 'Description',
+            ),
+            'keywords'    => array(
+                'label' => 'Keywords',
+            ),
         );
     }
 

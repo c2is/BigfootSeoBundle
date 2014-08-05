@@ -48,7 +48,7 @@ class SeoExtension extends Twig_Extension
         );
     }
 
-    public function seoTitle($route, $defaultKey, $entity = null)
+    public function seoTitle($route, $defaultKey = null, $entity = null)
     {
         $em = $this->entityManager;
         $metadata = $this->getMetadata($route, $defaultKey);
@@ -71,7 +71,7 @@ class SeoExtension extends Twig_Extension
         return false;
     }
 
-    public function seoDescription($route, $defaultKey, $entity = null)
+    public function seoDescription($route, $defaultKey = null, $entity = null)
     {
         $em = $this->entityManager;
         $metadata = $this->getMetadata($route, $defaultKey);
@@ -98,7 +98,7 @@ class SeoExtension extends Twig_Extension
         return false;
     }
 
-    public function seoKeywords($route, $defaultKey, $entity = null)
+    public function seoKeywords($route, $defaultKey = null, $entity = null)
     {
         $em = $this->entityManager;
         $metadata = $this->getMetadata($route, $defaultKey);
@@ -125,7 +125,7 @@ class SeoExtension extends Twig_Extension
         return false;
     }
 
-    public function getMetadata($route, $defaultKey)
+    public function getMetadata($route, $defaultKey = null)
     {
         $em = $this->entityManager;
         $contextRepo = $this->contextRepo;
@@ -134,7 +134,7 @@ class SeoExtension extends Twig_Extension
         $metadataRepo = $em->getRepository('BigfootSeoBundle:Metadata');
         $metadata = $metadataRepo->findOneByRoute($route, $contextualizedQuery);
 
-        if (!$metadata) {
+        if (!$metadata && $defaultKey !== null) {
             $metadata = $metadataRepo->findOneByRoute($defaultKey, $contextualizedQuery);
         }
 

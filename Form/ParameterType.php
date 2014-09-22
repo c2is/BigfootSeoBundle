@@ -35,7 +35,8 @@ class ParameterType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Bigfoot\Bundle\SeoBundle\Entity\Parameter'
+            'data_class' => 'Bigfoot\Bundle\SeoBundle\Entity\Parameter',
+            'label'      => false,
         ));
     }
 
@@ -47,5 +48,13 @@ class ParameterType extends AbstractType
     public function getName()
     {
         return 'bigfoot_bundle_seobundle_parametertype';
+    }
+
+    /**
+     * @return string
+     */
+    public function getParent()
+    {
+        return 'bigfoot_collection_item';
     }
 }

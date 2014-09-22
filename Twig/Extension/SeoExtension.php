@@ -50,6 +50,7 @@ class SeoExtension extends Twig_Extension
 
     public function seoTitle($route, $defaultKey = null, $entity = null)
     {
+
         $em = $this->entityManager;
         $metadata = $this->getMetadata($route, $defaultKey);
 

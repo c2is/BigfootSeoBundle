@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "bigfoot/core-bundle": "dev-master"
+        "bigfoot/core-bundle": "~2.3.0"
     },
     "autoload": {
         "psr-0": { "Bigfoot\\Bundle\\SeoBundle": "" }

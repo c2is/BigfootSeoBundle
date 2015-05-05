@@ -2,6 +2,8 @@
 
 namespace Bigfoot\Bundle\SeoBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -42,7 +44,18 @@ class Parameter
      */
     private $method;
 
+    /**
+     * @var Collection
+     */
     private $metadataParameters;
+
+    /**
+     * Contructor.
+     */
+    public function __construct()
+    {
+        $this->metadataParameters = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -100,6 +113,9 @@ class Parameter
         return $this->description;
     }
 
+    /**
+     * @param \Bigfoot\Bundle\SeoBundle\Entity\MetadataParameter $metadataParameter
+     */
     public function addMetadataParameter(MetadataParameter $metadataParameter)
     {
         if (!$this->metadataParameters->contains($metadataParameter)) {

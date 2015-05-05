@@ -3,6 +3,7 @@
 namespace Bigfoot\Bundle\SeoBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 
 /**
  * MetadataParameterRepository
@@ -12,4 +13,25 @@ use Doctrine\ORM\EntityRepository;
  */
 class MetadataParameterRepository extends EntityRepository
 {
+    /**
+     * @param $route
+     *
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findOneByRoute($route)
+    {
+        return $this->createQueryBuilder('e')
+            ->select('e, p')
+            ->join('e.parameters', 'p')
+            ->andWhere('e.route = :route')
+            ->setParameter(':route', $route)
+            ->getQuery()
+            ->setHint(
+                Query::HINT_CUSTOM_OUTPUT_WALKER,
+                'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+            )
+            ->getOneOrNullResult()
+        ;
+    }
 }

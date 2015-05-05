@@ -3,6 +3,7 @@
 namespace Bigfoot\Bundle\SeoBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -30,8 +31,13 @@ class MetadataRepository extends EntityRepository
             ->andWhere('e.route = :route')
             ->setParameter(':route', $route)
             ->getQuery()
+            ->setHint(
+                Query::HINT_CUSTOM_OUTPUT_WALKER,
+                'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+            )
             ->getResult()
         ;
+
         return $results ? $results[0] : null;
     }
 }

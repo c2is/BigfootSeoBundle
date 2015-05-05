@@ -4,7 +4,9 @@ namespace Bigfoot\Bundle\SeoBundle\Twig\Extension;
 
 use Bigfoot\Bundle\ContextBundle\Entity\ContextRepository;
 use Bigfoot\Bundle\ContextBundle\Service\ContextService;
+use Bigfoot\Bundle\SeoBundle\Entity\MetadataParameterRepository;
 use Bigfoot\Bundle\SeoBundle\Entity\MetadataRepository;
+use Bigfoot\Bundle\SeoBundle\Entity\Parameter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Doctrine\ORM\EntityManager;
 use Twig_Extension;
@@ -48,20 +50,30 @@ class SeoExtension extends Twig_Extension
         );
     }
 
+    /**
+     * @param      $route
+     * @param null $defaultKey
+     * @param null $entity
+     *
+     * @return bool|mixed|string
+     */
     public function seoTitle($route, $defaultKey = null, $entity = null)
     {
-
         $em = $this->entityManager;
         $metadata = $this->getMetadata($route, $defaultKey);
 
         if ($metadata) {
             $title = $metadata->getTitle();
-            $metadataParameter = $em->getRepository('BigfootSeoBundle:MetadataParameter')->findOneBy(array('route' => $route));
+            /** @var MetadataParameterRepository $metaRepo */
+            $metaRepo = $em->getRepository('BigfootSeoBundle:MetadataParameter');
+            $metadataParameter = $metaRepo->findOneByRoute($route);
+
             if ($metadataParameter) {
+                /** @var Parameter $parameter */
                 foreach ($metadataParameter->getParameters() as $parameter) {
-                    if ($entity && strstr($title,$parameter->getName()) && method_exists($entity,$parameter->getMethod())) {
-                        $strReplace = call_user_func(array($entity,$parameter->getMethod()));
-                        $title = str_replace($parameter->getName(),$strReplace,$title);
+                    if ($entity && strstr($title, $parameter->getName()) && method_exists($entity, $parameter->getMethod())) {
+                        $strReplace = call_user_func(array($entity, $parameter->getMethod()));
+                        $title = str_replace($parameter->getName(), $strReplace, $title);
                     }
                 }
             }
@@ -72,23 +84,36 @@ class SeoExtension extends Twig_Extension
         return false;
     }
 
+    /**
+     * @param      $route
+     * @param null $defaultKey
+     * @param null $entity
+     *
+     * @return bool|mixed|string
+     */
     public function seoDescription($route, $defaultKey = null, $entity = null)
     {
         $em = $this->entityManager;
         $metadata = $this->getMetadata($route, $defaultKey);
 
         if (!$metadata) {
-            $metadata = $em->getRepository('BigfootSeoBundle:Metadata')->findOneBy(array('route' => $defaultKey));
+            /** @var MetadataRepository $metaRepo */
+            $metaRepo = $em->getRepository('BigfootSeoBundle:Metadata');
+            $metadata = $metaRepo->findOneByRoute($defaultKey);
         }
 
         if ($metadata) {
             $description = $metadata->getDescription();
-            $metadataParameter = $em->getRepository('BigfootSeoBundle:MetadataParameter')->findOneBy(array('route' => $route));
+            /** @var MetadataParameterRepository $metaParamRepo */
+            $metaParamRepo = $em->getRepository('BigfootSeoBundle:MetadataParameter');
+            $metadataParameter = $metaParamRepo->findOneByRoute($route);
+
             if ($metadataParameter) {
+                /** @var Parameter $parameter */
                 foreach ($metadataParameter->getParameters() as $parameter) {
-                    if ($entity && strstr($description,$parameter->getName()) && method_exists($entity,$parameter->getMethod())) {
-                        $strReplace = call_user_func(array($entity,$parameter->getMethod()));
-                        $description = str_replace($parameter->getName(),$strReplace,$description);
+                    if ($entity && strstr($description, $parameter->getName()) && method_exists($entity, $parameter->getMethod())) {
+                        $strReplace = call_user_func(array($entity, $parameter->getMethod()));
+                        $description = str_replace($parameter->getName(), $strReplace, $description);
                     }
                 }
             }
@@ -99,23 +124,36 @@ class SeoExtension extends Twig_Extension
         return false;
     }
 
+    /**
+     * @param      $route
+     * @param null $defaultKey
+     * @param null $entity
+     *
+     * @return bool|mixed|string
+     */
     public function seoKeywords($route, $defaultKey = null, $entity = null)
     {
         $em = $this->entityManager;
         $metadata = $this->getMetadata($route, $defaultKey);
 
         if (!$metadata) {
-            $metadata = $em->getRepository('BigfootSeoBundle:Metadata')->findOneBy(array('route' => $defaultKey));
+            /** @var MetadataRepository $metaRepo */
+            $metaRepo = $em->getRepository('BigfootSeoBundle:Metadata');
+            $metadata = $metaRepo->findOneByRoute($defaultKey);
         }
 
         if ($metadata) {
             $keywords = $metadata->getKeywords();
-            $metadataParameter = $em->getRepository('BigfootSeoBundle:MetadataParameter')->findOneBy(array('route' => $route));
+            /** @var MetadataParameterRepository $metaParamRepo */
+            $metaParamRepo = $em->getRepository('BigfootSeoBundle:MetadataParameter');
+            $metadataParameter = $metaParamRepo->findOneByRoute($route);
+
             if ($metadataParameter) {
+                /** @var Parameter $parameter */
                 foreach ($metadataParameter->getParameters() as $parameter) {
-                    if ($entity && strstr($keywords,$parameter->getName()) && method_exists($entity,$parameter->getMethod())) {
-                        $strReplace = call_user_func(array($entity,$parameter->getMethod()));
-                        $keywords = str_replace($parameter->getName(),$strReplace,$keywords);
+                    if ($entity && strstr($keywords, $parameter->getName()) && method_exists($entity, $parameter->getMethod())) {
+                        $strReplace = call_user_func(array($entity, $parameter->getMethod()));
+                        $keywords = str_replace($parameter->getName(), $strReplace, $keywords);
                     }
                 }
             }
@@ -126,6 +164,13 @@ class SeoExtension extends Twig_Extension
         return false;
     }
 
+    /**
+     * @param      $route
+     * @param null $defaultKey
+     *
+     * @return \Bigfoot\Bundle\SeoBundle\Entity\Metadata|null
+     * @throws \Bigfoot\Bundle\ContextBundle\Exception\InvalidConfigurationException
+     */
     public function getMetadata($route, $defaultKey = null)
     {
         $em = $this->entityManager;

@@ -38,15 +38,18 @@ class ParameterController extends CrudController
     {
         return array('id' => 'ID');
     }
+
     /**
      * Lists all Parameter entities.
      *
      * @Route("/", name="admin_seo_parameter")
      * @Method("GET")
+     * @param Request $request
+     * @return array
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        return $this->doIndex();
+        return $this->doIndex($request);
     }
 
     /**

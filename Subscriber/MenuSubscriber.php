@@ -6,7 +6,7 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Bigfoot\Bundle\CoreBundle\Event\MenuEvent;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 /**
  * Menu Subscriber
@@ -14,14 +14,14 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 class MenuSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var \Symfony\Component\Security\Core\SecurityContextInterface
+     * @var TokenStorage
      */
     private $security;
 
     /**
-     * @param SecurityContextInterface $security
+     * @param TokenStorage $security
      */
-    public function __construct(SecurityContextInterface $security)
+    public function __construct(TokenStorage $security)
     {
         $this->security = $security;
     }

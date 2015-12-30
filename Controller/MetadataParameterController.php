@@ -71,10 +71,12 @@ class MetadataParameterController extends CrudController
      * Lists all MetadataParameter entities.
      *
      * @Route("/", name="admin_parameter_metadataparameter")
+     * @param Request $request
+     * @return array
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        return $this->doIndex();
+        return $this->doIndex($request);
     }
 
     /**

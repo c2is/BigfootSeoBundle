@@ -5,7 +5,7 @@ namespace Bigfoot\Bundle\SeoBundle\Form;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Form used to create some custom metadata parameters for a route
@@ -56,7 +56,7 @@ class MetadataType extends AbstractType
      *
      * @param OptionsResolverInterface $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'Bigfoot\Bundle\SeoBundle\Entity\Metadata'

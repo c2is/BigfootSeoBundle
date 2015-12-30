@@ -2,10 +2,11 @@
 
 namespace Bigfoot\Bundle\SeoBundle\Helper;
 
-use Bigfoot\Bundle\CoreBundle\Route\RouteManager;
+use Bigfoot\Bundle\SeoBundle\Manager\RouteManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class SeoHelper
 {
@@ -43,8 +44,9 @@ class SeoHelper
      * Constructor.
      *
      * @param Container $container
+     * @param RequestStack $requestStack
      */
-    public function __construct(Container $container)
+    public function __construct(Container $container, RequestStack $requestStack)
     {
         $this->twig = $container->get('twig');
 
@@ -64,9 +66,9 @@ class SeoHelper
             'keywords',
         );
 
-        if ($container->isScopeActive('request')) {
-            $this->request = $container->get('request');
-        } else {
+        $this->request = $requestStack->getCurrentRequest();
+
+        if (null === $this->request) {
             $this->request = new Request();
         }
 

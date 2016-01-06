@@ -5,24 +5,26 @@ parameters:
 services:
     form.type.metadata:
         class: '%bigfoot_seo.metadatatype.class%'
-        arguments: [@bigfoot_seo.manager.route]
+        arguments: ['@bigfoot_seo.manager.route']
         tags:
             - { name: form.type, alias: metadata }
     form.type.metadataparameter:
             class: '%bigfoot_seo.metadataparametertype.class%'
-            arguments: [@bigfoot_seo.manager.route]
+            arguments: ['@bigfoot_seo.manager.route']
             tags:
                 - { name: form.type, alias: metadataparameter }
 
     bigfoot_seo.helper:
         class: Bigfoot\Bundle\SeoBundle\Helper\SeoHelper
-        arguments: [ @service_container ]
+        arguments:
+            - '@service_container'
+            - '@request_stack'
 
     # Menu Subscriber
     bigfoot_seo.subscriber.menu:
         class: Bigfoot\Bundle\SeoBundle\Subscriber\MenuSubscriber
         arguments:
-            - @security.context
+            - '@security.token_storage'
         tags:
             - { name: kernel.event_subscriber }
 
@@ -30,9 +32,9 @@ services:
     bigfoot_seo.twig.extension.seo:
         class: Bigfoot\Bundle\SeoBundle\Twig\Extension\SeoExtension
         arguments:
-            - @doctrine.orm.entity_manager
-            - @bigfoot_context
-            - @bigfoot_context.repository.context
+            - '@doctrine.orm.entity_manager'
+            - '@bigfoot_context'
+            - '@bigfoot_context.repository.context'
         tags:
             - { name: twig.extension }
 
@@ -40,5 +42,5 @@ services:
     bigfoot_seo.manager.route:
         class: Bigfoot\Bundle\SeoBundle\Manager\RouteManager
         arguments:
-            - @router
+            - '@router'
             - %bigfoot_seo%

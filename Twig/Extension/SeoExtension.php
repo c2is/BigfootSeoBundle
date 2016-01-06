@@ -10,7 +10,7 @@ use Bigfoot\Bundle\SeoBundle\Entity\Parameter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Doctrine\ORM\EntityManager;
 use Twig_Extension;
-use Twig_Function_Method;
+use Twig_SimpleFunction;
 use Twig_Environment;
 use BeSimple\I18nRoutingBundle\Routing\Router;
 
@@ -44,9 +44,9 @@ class SeoExtension extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            'seo_title'       => new Twig_Function_Method($this, 'seoTitle', array('is_safe' => array('html'))),
-            'seo_description' => new Twig_Function_Method($this, 'seoDescription', array('is_safe' => array('html'))),
-            'seo_keywords'    => new Twig_Function_Method($this, 'seoKeywords', array('is_safe' => array('html'))),
+            new Twig_SimpleFunction('seo_title', array($this, 'seoTitle'), array('is_safe' => array('html'))),
+            new Twig_SimpleFunction('seo_description', array($this, 'seoDescription'), array('is_safe' => array('html'))),
+            new Twig_SimpleFunction('seo_keywords', array($this, 'seoKeywords'), array('is_safe' => array('html'))),
         );
     }
 

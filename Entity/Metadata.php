@@ -6,6 +6,7 @@ use Bigfoot\Bundle\SeoBundle\Entity\Translation\MetadataTranslation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Metadata
@@ -35,6 +36,7 @@ class Metadata
     /**
      * @var string
      *
+     * @Assert\NotBlank()
      * @Gedmo\Translatable
      * @ORM\Column(name="title", type="string", length=255)
      */
@@ -43,6 +45,7 @@ class Metadata
     /**
      * @var string
      *
+     * @Assert\NotBlank()
      * @Gedmo\Translatable
      * @ORM\Column(name="description", type="text")
      */
@@ -51,6 +54,7 @@ class Metadata
     /**
      * @var string
      *
+     * @Assert\NotBlank()
      * @Gedmo\Translatable
      * @ORM\Column(name="keywords", type="text")
      */
@@ -81,7 +85,7 @@ class Metadata
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -97,14 +101,14 @@ class Metadata
     public function setRoute($route)
     {
         $this->route = $route;
-    
+
         return $this;
     }
 
     /**
      * Get route
      *
-     * @return string 
+     * @return string
      */
     public function getRoute()
     {
@@ -120,14 +124,14 @@ class Metadata
     public function setTitle($title)
     {
         $this->title = $title;
-    
+
         return $this;
     }
 
     /**
      * Get title
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {
@@ -143,14 +147,14 @@ class Metadata
     public function setDescription($description)
     {
         $this->description = $description;
-    
+
         return $this;
     }
 
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -166,14 +170,14 @@ class Metadata
     public function setKeywords($keywords)
     {
         $this->keywords = $keywords;
-    
+
         return $this;
     }
 
     /**
      * Get keywords
      *
-     * @return string 
+     * @return string
      */
     public function getKeywords()
     {

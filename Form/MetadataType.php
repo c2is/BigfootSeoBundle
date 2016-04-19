@@ -2,8 +2,10 @@
 
 namespace Bigfoot\Bundle\SeoBundle\Form;
 
+use Bigfoot\Bundle\CoreBundle\Form\Type\TranslatedEntityType;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -36,9 +38,9 @@ class MetadataType extends AbstractType
         $routes = $this->bigfootSeoManagerRoute->getArrayRouteCollection();
 
         $builder
-            ->add('route','choice',array(
-                'choices' => $routes,
-                'attr' => array(
+            ->add('route', ChoiceType::class, array(
+                'choices' => array_flip($routes),
+                'attr'    => array(
                     'class' => 'seo-metadata-route-choice',
                 ),
             ));
@@ -47,14 +49,13 @@ class MetadataType extends AbstractType
             ->add('title')
             ->add('description')
             ->add('keywords')
-            ->add('translation', 'translatable_entity')
-        ;
+            ->add('translation', TranslatedEntityType::class);
     }
 
     /**
      * Set the default options
      *
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {

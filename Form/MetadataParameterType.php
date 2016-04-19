@@ -4,6 +4,8 @@ namespace Bigfoot\Bundle\SeoBundle\Form;
 
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -35,14 +37,14 @@ class MetadataParameterType extends AbstractType
         $routes = $this->bigfootSeoManagerRoute->getArrayRouteCollection();
 
         $builder
-            ->add('route','choice',array(
-                'choices' => $routes
+            ->add('route', ChoiceType::class, array(
+                'choices' => array_flip($routes)
             ));
 
 
-        $builder->add('parameters', 'collection', array(
-            'type' => new ParameterType(),
-            'allow_add' => true,
+        $builder->add('parameters', CollectionType::class, array(
+            'entry_type'   => ParameterType::class,
+            'allow_add'    => true,
             'allow_delete' => true,
             'by_reference' => false,
 
@@ -52,7 +54,7 @@ class MetadataParameterType extends AbstractType
     /**
      * Set the default options
      *
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {

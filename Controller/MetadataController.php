@@ -64,7 +64,7 @@ class MetadataController extends CrudController
 
     protected function getFormType()
     {
-        return 'metadata';
+        return MetadataType::class;
     }
 
     protected function getEntityLabelPlural()
@@ -128,7 +128,7 @@ class MetadataController extends CrudController
     {
 
         $entity = new Metadata();
-        $form   = $this->createForm('metadata', $entity);
+        $form   = $this->createForm(MetadataType::class, $entity);
 
         if ('POST' === $request->getMethod()) {
             $form->handleRequest($request);
@@ -175,7 +175,7 @@ class MetadataController extends CrudController
             throw new NotFoundHttpException('Unable to find Metadata entity.');
         }
 
-        $editForm   = $this->createForm('metadata', $entity);
+        $editForm   = $this->createForm(MetadataType::class, $entity);
 
         return array(
             'form'              => $editForm->createView(),
@@ -204,7 +204,7 @@ class MetadataController extends CrudController
             throw new NotFoundHttpException('Unable to find Metadata entity.');
         }
 
-        $editForm   = $this->createForm('metadata', $entity);
+        $editForm   = $this->createForm(MetadataType::class, $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {

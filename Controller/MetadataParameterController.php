@@ -59,7 +59,7 @@ class MetadataParameterController extends CrudController
 
     protected function getFormType()
     {
-        return 'metadataparameter';
+        return MetadataParameterType::class;
     }
 
     protected function getEntityLabelPlural()

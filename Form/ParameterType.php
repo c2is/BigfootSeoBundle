@@ -2,6 +2,7 @@
 
 namespace Bigfoot\Bundle\SeoBundle\Form;
 
+use Bigfoot\Bundle\CoreBundle\Form\Type\CollectionItemType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -30,7 +31,7 @@ class ParameterType extends AbstractType
     /**
      * Set the defaults options
      *
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -55,6 +56,6 @@ class ParameterType extends AbstractType
      */
     public function getParent()
     {
-        return 'bigfoot_collection_item';
+        return CollectionItemType::class;
     }
 }

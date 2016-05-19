@@ -61,6 +61,14 @@ class Metadata
     private $keywords;
 
     /**
+     * @var \DateTime $updatedAt
+     *
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime")
+     */
+    private $updatedAt;
+
+    /**
      * @Gedmo\Locale
      */
     private $locale;
@@ -209,5 +217,23 @@ class Metadata
             $this->translations[] = $t;
             $t->setObject($this);
         }
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param \DateTime $updatedAt
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
     }
 }

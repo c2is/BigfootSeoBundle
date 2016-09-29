@@ -205,7 +205,7 @@ class MetadataController extends CrudController
         }
 
         $editForm   = $this->createForm(MetadataType::class, $entity);
-        $editForm->submit($request);
+        $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);

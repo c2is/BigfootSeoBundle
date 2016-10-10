@@ -179,7 +179,7 @@ class MetadataController extends CrudController
 
         return array(
             'form'              => $editForm->createView(),
-            'form_method'       => 'PUT',
+            'form_method'       => 'POST',
             'form_action'       => $this->container->get('router')->generate('admin_seo_metadata_update', array('id' => $entity->getId())),
             'form_submit'       => 'Edit',
             'form_title'        => 'Metadata edit',
@@ -210,13 +210,16 @@ class MetadataController extends CrudController
         if ($editForm->isValid()) {
             $em->persist($entity);
             $em->flush();
+            $this->addSuccessFlash('bigfoot_core.flash.edit.confirm');
 
-            return new RedirectResponse($this->container->get('router')->generate('admin_seo_metadata'));
+            return new RedirectResponse($this->container->get('router')->generate('admin_seo_metadata_edit', [
+                'id' => $id
+            ]));
         }
 
         return array(
             'form'              => $editForm->createView(),
-            'form_method'       => 'PUT',
+            'form_method'       => 'POST',
             'form_action'       => $this->container->get('router')->generate('admin_seo_metadata_update', array('id' => $entity->getId())),
             'form_submit'       => 'Edit',
             'form_title'        => 'Metadata edit',

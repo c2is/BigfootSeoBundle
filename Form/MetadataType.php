@@ -6,6 +6,7 @@ use Bigfoot\Bundle\CoreBundle\Form\Type\TranslatedEntityType;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -48,7 +49,7 @@ class MetadataType extends AbstractType
         $builder
             ->add('title')
             ->add('description')
-            ->add('keywords')
+            ->add('keywords', TextareaType::class, ['required' => false])
             ->add('translation', TranslatedEntityType::class);
     }
 

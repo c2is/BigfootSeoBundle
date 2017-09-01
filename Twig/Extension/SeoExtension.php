@@ -8,8 +8,10 @@ use Bigfoot\Bundle\ContextBundle\Service\ContextService;
 use Bigfoot\Bundle\SeoBundle\Entity\MetadataParameterRepository;
 use Bigfoot\Bundle\SeoBundle\Entity\MetadataRepository;
 use Bigfoot\Bundle\SeoBundle\Entity\Parameter;
+use Bigfoot\Bundle\SeoBundle\Manager\SeoManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Twig_Extension;
 use Twig_SimpleFunction;
 
@@ -19,7 +21,7 @@ use Twig_SimpleFunction;
 class SeoExtension extends Twig_Extension
 {
     /** @var \Doctrine\ORM\EntityManager */
-    private $entityManager;
+    private $objectManager;
 
     /** @var \Bigfoot\Bundle\ContextBundle\Service\ContextService */
     private $context;
@@ -27,14 +29,33 @@ class SeoExtension extends Twig_Extension
     /** @var \Bigfoot\Bundle\ContextBundle\Entity\ContextRepository */
     private $contextRepo;
 
+    /** @var \Bigfoot\Bundle\SeoBundle\Manager\SeoManager */
+    private $seoManager;
+
+    /** @var \Symfony\Component\PropertyAccess\PropertyAccessor */
+    private $propertyAccessor;
+
     /**
-     * Construct ContentExtension
+     * SeoExtension constructor.
+     *
+     * @param \Doctrine\ORM\EntityManager                            $objectManager
+     * @param \Bigfoot\Bundle\ContextBundle\Service\ContextService   $context
+     * @param \Bigfoot\Bundle\ContextBundle\Entity\ContextRepository $contextRepo
+     * @param \Bigfoot\Bundle\SeoBundle\Manager\SeoManager           $seoManager
+     * @param \Symfony\Component\PropertyAccess\PropertyAccessor     $propertyAccessor
      */
-    public function __construct(EntityManager $entityManager, ContextService $context, ContextRepository $contextRepo)
-    {
-        $this->entityManager = $entityManager;
-        $this->context       = $context;
-        $this->contextRepo   = $contextRepo;
+    public function __construct(
+        EntityManager $objectManager,
+        ContextService $context,
+        ContextRepository $contextRepo,
+        SeoManager $seoManager,
+        PropertyAccessor $propertyAccessor
+    ) {
+        $this->entityManager    = $objectManager;
+        $this->context          = $context;
+        $this->contextRepo      = $contextRepo;
+        $this->seoManager       = $seoManager;
+        $this->propertyAccessor = $propertyAccessor;
     }
 
     /**
@@ -52,14 +73,18 @@ class SeoExtension extends Twig_Extension
     /**
      * @param \Symfony\Component\HttpFoundation\Request|string $route
      * @param string|null                                      $defaultKey
-     * @param object|null                                      $entity
+     * @param object|null                                      $object
      *
      * @return bool|mixed|string
      */
-    public function seoTitle($route, $defaultKey = null, $entity = null)
+    public function seoTitle($route, $defaultKey = null, $object = null)
     {
         if ($route instanceof Request) {
             $route = $route->attributes->get('_route');
+        }
+
+        if (null === $object) {
+            $object = $this->seoManager->getObject();
         }
 
         $em       = $this->entityManager;
@@ -71,16 +96,10 @@ class SeoExtension extends Twig_Extension
             $metaRepo          = $em->getRepository('BigfootSeoBundle:MetadataParameter');
             $metadataParameter = $metaRepo->findOneByRoute($route);
 
-            if ($metadataParameter) {
+            if ($object && $metadataParameter) {
                 /** @var Parameter $parameter */
                 foreach ($metadataParameter->getParameters() as $parameter) {
-                    if ($entity && strstr($title, $parameter->getName()) && method_exists(
-                            $entity,
-                            $parameter->getMethod()
-                        )) {
-                        $strReplace = call_user_func([$entity, $parameter->getMethod()]);
-                        $title      = str_replace($parameter->getName(), $strReplace, $title);
-                    }
+                    $title = $this->processParameter($parameter, $title, $object);
                 }
             }
 
@@ -114,16 +133,42 @@ class SeoExtension extends Twig_Extension
     }
 
     /**
+     * @param \Bigfoot\Bundle\SeoBundle\Entity\Parameter $parameter
+     * @param string                                     $string
+     * @param object                                     $object
+     *
+     * @return mixed
+     */
+    private function processParameter(Parameter $parameter, $string, $object)
+    {
+        if (strstr($string, $parameter->getName())) {
+            try {
+                $value = $this->propertyAccessor->getValue($object, $parameter->getMethod());
+
+                return str_replace('%'.trim($parameter->getName(), '%').'%', $value, $string);
+            } catch (\Exception $e) {
+
+            }
+        }
+
+        return $string;
+    }
+
+    /**
      * @param \Symfony\Component\HttpFoundation\Request|string $route
      * @param string|null                                      $defaultKey
-     * @param object|null                                      $entity
+     * @param object|null                                      $object
      *
      * @return bool|mixed|string
      */
-    public function seoDescription($route, $defaultKey = null, $entity = null)
+    public function seoDescription($route, $defaultKey = null, $object = null)
     {
         if ($route instanceof Request) {
             $route = $route->attributes->get('_route');
+        }
+
+        if (null === $object) {
+            $object = $this->seoManager->getObject();
         }
 
         $em       = $this->entityManager;
@@ -141,16 +186,10 @@ class SeoExtension extends Twig_Extension
             $metaParamRepo     = $em->getRepository('BigfootSeoBundle:MetadataParameter');
             $metadataParameter = $metaParamRepo->findOneByRoute($route);
 
-            if ($metadataParameter) {
+            if ($object && $metadataParameter) {
                 /** @var Parameter $parameter */
                 foreach ($metadataParameter->getParameters() as $parameter) {
-                    if ($entity && strstr($description, $parameter->getName()) && method_exists(
-                            $entity,
-                            $parameter->getMethod()
-                        )) {
-                        $strReplace  = call_user_func([$entity, $parameter->getMethod()]);
-                        $description = str_replace($parameter->getName(), $strReplace, $description);
-                    }
+                    $description = $this->processParameter($parameter, $description, $object);
                 }
             }
 
@@ -163,14 +202,18 @@ class SeoExtension extends Twig_Extension
     /**
      * @param      $route
      * @param null $defaultKey
-     * @param null $entity
+     * @param null $object
      *
      * @return bool|mixed|string
      */
-    public function seoKeywords($route, $defaultKey = null, $entity = null)
+    public function seoKeywords($route, $defaultKey = null, $object = null)
     {
         $em       = $this->entityManager;
         $metadata = $this->getMetadata($route, $defaultKey);
+
+        if (null === $object) {
+            $object = $this->seoManager->getObject();
+        }
 
         if (!$metadata) {
             /** @var MetadataRepository $metaRepo */
@@ -184,16 +227,10 @@ class SeoExtension extends Twig_Extension
             $metaParamRepo     = $em->getRepository('BigfootSeoBundle:MetadataParameter');
             $metadataParameter = $metaParamRepo->findOneByRoute($route);
 
-            if ($metadataParameter) {
+            if ($object && $metadataParameter) {
                 /** @var Parameter $parameter */
                 foreach ($metadataParameter->getParameters() as $parameter) {
-                    if ($entity && strstr($keywords, $parameter->getName()) && method_exists(
-                            $entity,
-                            $parameter->getMethod()
-                        )) {
-                        $strReplace = call_user_func([$entity, $parameter->getMethod()]);
-                        $keywords   = str_replace($parameter->getName(), $strReplace, $keywords);
-                    }
+                    $keywords = $this->processParameter($parameter, $keywords, $object);
                 }
             }
 

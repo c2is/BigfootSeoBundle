@@ -52,7 +52,7 @@ class Metadata
      * @var string
      *
      * @Gedmo\Translatable
-     * @ORM\Column(name="keywords", type="text")
+     * @ORM\Column(name="keywords", type="text", nullable=true)
      */
     private $keywords;
 

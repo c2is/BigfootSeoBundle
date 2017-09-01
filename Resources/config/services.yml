@@ -35,6 +35,8 @@ services:
             - '@doctrine.orm.entity_manager'
             - '@bigfoot_context'
             - '@bigfoot_context.repository.context'
+            - '@bigfoot_seo.manager.seo'
+            - '@property_accessor'
         tags:
             - { name: twig.extension }
 
@@ -44,3 +46,6 @@ services:
         arguments:
             - '@router'
             - %bigfoot_seo%
+
+    bigfoot_seo.manager.seo:
+        class: Bigfoot\Bundle\SeoBundle\Manager\SeoManager

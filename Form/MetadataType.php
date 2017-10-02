@@ -47,8 +47,8 @@ class MetadataType extends AbstractType
             ));
 
         $builder
-            ->add('title')
-            ->add('description')
+            ->add('title', ['required' => false])
+            ->add('description', ['required' => false])
             ->add('keywords', TextareaType::class, ['required' => false])
             ->add('translation', TranslatedEntityType::class);
     }

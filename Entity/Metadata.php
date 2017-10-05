@@ -6,6 +6,7 @@ use Bigfoot\Bundle\SeoBundle\Entity\Translation\MetadataTranslation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Metadata
@@ -37,6 +38,7 @@ class Metadata
      *
      * @Gedmo\Translatable
      * @ORM\Column(name="title", type="string", length=255, nullable=true)
+     * @Assert\NotBlank()
      */
     private $title;
 

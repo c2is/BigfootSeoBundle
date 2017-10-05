@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -47,8 +48,8 @@ class MetadataType extends AbstractType
             ));
 
         $builder
-            ->add('title', ['required' => false])
-            ->add('description', ['required' => false])
+            ->add('title', TextType::class)
+            ->add('description', TextType::class, ['required' => false])
             ->add('keywords', TextareaType::class, ['required' => false])
             ->add('translation', TranslatedEntityType::class);
     }

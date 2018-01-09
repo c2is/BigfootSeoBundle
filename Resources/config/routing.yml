@@ -2,4 +2,4 @@ bigfoot_seo:
     resource: "@BigfootSeoBundle/Controller/"
     type:     annotation
     prefix:   /admin
-    schemes: [ %bigfoot.scheme% ]
+    schemes: [ '%bigfoot.scheme%' ]

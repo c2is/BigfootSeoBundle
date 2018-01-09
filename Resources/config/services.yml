@@ -45,7 +45,7 @@ services:
         class: Bigfoot\Bundle\SeoBundle\Manager\RouteManager
         arguments:
             - '@router'
-            - %bigfoot_seo%
+            - '%bigfoot_seo%'
 
     bigfoot_seo.manager.seo:
         class: Bigfoot\Bundle\SeoBundle\Manager\SeoManager

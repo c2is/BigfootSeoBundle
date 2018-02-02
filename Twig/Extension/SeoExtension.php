@@ -87,6 +87,10 @@ class SeoExtension extends Twig_Extension
             $object = $this->seoManager->getObject();
         }
 
+        if (method_exists($object, 'getSeoTitle') && ($title = $object->getSeoTitle())) {
+            return $title;
+        }
+
         $em       = $this->entityManager;
         $metadata = $this->getMetadata($route, $defaultKey);
 

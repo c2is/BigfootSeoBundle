@@ -26,6 +26,7 @@ class MetadataParameterRepository extends EntityRepository
             ->join('e.parameters', 'p')
             ->andWhere('e.route = :route')
             ->setParameter(':route', $route)
+            ->useQueryCache(null)
             ->getQuery()
             ->setHint(
                 Query::HINT_CUSTOM_OUTPUT_WALKER,
